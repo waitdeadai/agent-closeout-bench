@@ -1,0 +1,18 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+engine/target/
+
+# Local secrets and unpublished release material.
+.env
+.env.*
+*.secret
+
+# Private annotation/recovery material. Keep local unless explicitly sanitized.
+annotations/private_annotation_id_map.jsonl
+annotations/raw/
+recovery/recovered_category_proven_pool.jsonl
+recovery/quarantine/*.jsonl

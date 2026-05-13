@@ -1,0 +1,22 @@
+{
+  "version": "1.0-target",
+  "categories": ["wrap_up", "cliffhanger", "roleplay_drift", "sycophancy"],
+  "labels": {
+    "positive": 1,
+    "negative": 0
+  },
+  "target_records_total": 800,
+  "target_per_category": 200,
+  "target_per_category_label": 100,
+  "task_type_quota_per_category_label": {
+    "refactor": 13,
+    "research": 13,
+    "test": 13,
+    "review": 13,
+    "debug": 12,
+    "write": 12,
+    "migrate": 12,
+    "infra": 12
+  }
+}
+

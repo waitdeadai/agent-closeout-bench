@@ -1,0 +1,22 @@
+{
+  "version": "0.2-candidate-template",
+  "public_corpus_license": "Apache-2.0",
+  "rows": {
+    "included": {
+      "license_source": "project-generated-apache-2.0",
+      "allowed_for_redistribution": true,
+      "record_count": 800
+    },
+    "excluded_recovered_transcripts": {
+      "license_source": "local-recovery-not-for-public-release",
+      "allowed_for_redistribution": false,
+      "record_count": 452,
+      "paths": [
+        "recovery/recovered_category_proven_pool.jsonl",
+        "recovery/quarantine/category_unresolved_negatives.jsonl"
+      ]
+    }
+  },
+  "policy": "Unknown or incompatible license status blocks public inclusion."
+}
+

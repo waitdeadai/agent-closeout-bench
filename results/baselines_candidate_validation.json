@@ -1,0 +1,261 @@
+{
+  "baselines": {
+    "always_clean": {
+      "cliffhanger": {
+        "F1": 0.0,
+        "F1_bootstrap_95": [
+          0.0,
+          0.0
+        ],
+        "FN": 20,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": null,
+        "TN": 20,
+        "TP": 0,
+        "accuracy": 0.5,
+        "n": 40,
+        "precision": null,
+        "precision_wilson_95": [
+          null,
+          null
+        ],
+        "recall": 0.0,
+        "recall_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ]
+      },
+      "macro_average": {
+        "F1": 0.0,
+        "FPR": 0.0,
+        "MCC": null,
+        "accuracy": 0.5,
+        "precision": null,
+        "recall": 0.0
+      },
+      "roleplay_drift": {
+        "F1": 0.0,
+        "F1_bootstrap_95": [
+          0.0,
+          0.0
+        ],
+        "FN": 20,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": null,
+        "TN": 20,
+        "TP": 0,
+        "accuracy": 0.5,
+        "n": 40,
+        "precision": null,
+        "precision_wilson_95": [
+          null,
+          null
+        ],
+        "recall": 0.0,
+        "recall_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ]
+      },
+      "sycophancy": {
+        "F1": 0.0,
+        "F1_bootstrap_95": [
+          0.0,
+          0.0
+        ],
+        "FN": 20,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": null,
+        "TN": 20,
+        "TP": 0,
+        "accuracy": 0.5,
+        "n": 40,
+        "precision": null,
+        "precision_wilson_95": [
+          null,
+          null
+        ],
+        "recall": 0.0,
+        "recall_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ]
+      },
+      "wrap_up": {
+        "F1": 0.0,
+        "F1_bootstrap_95": [
+          0.0,
+          0.0
+        ],
+        "FN": 20,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": null,
+        "TN": 20,
+        "TP": 0,
+        "accuracy": 0.5,
+        "n": 40,
+        "precision": null,
+        "precision_wilson_95": [
+          null,
+          null
+        ],
+        "recall": 0.0,
+        "recall_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ]
+      }
+    },
+    "canonical_keyword_regex": {
+      "cliffhanger": {
+        "F1": 0.0,
+        "F1_bootstrap_95": [
+          0.0,
+          0.0
+        ],
+        "FN": 20,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": null,
+        "TN": 20,
+        "TP": 0,
+        "accuracy": 0.5,
+        "n": 40,
+        "precision": null,
+        "precision_wilson_95": [
+          null,
+          null
+        ],
+        "recall": 0.0,
+        "recall_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ]
+      },
+      "macro_average": {
+        "F1": 0.46222139826144276,
+        "FPR": 0.0,
+        "MCC": 0.5384212848678676,
+        "accuracy": 0.66875,
+        "precision": 1.0,
+        "recall": 0.3375
+      },
+      "roleplay_drift": {
+        "F1": 0.5185185185185185,
+        "F1_bootstrap_95": [
+          0.2757836990595612,
+          0.7428571428571429
+        ],
+        "FN": 13,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": 0.4605661864718383,
+        "TN": 20,
+        "TP": 7,
+        "accuracy": 0.675,
+        "n": 40,
+        "precision": 1.0,
+        "precision_wilson_95": [
+          0.6456695649333126,
+          1.0
+        ],
+        "recall": 0.35,
+        "recall_wilson_95": [
+          0.1811918241010821,
+          0.5671457233147637
+        ]
+      },
+      "sycophancy": {
+        "F1": 0.7096774193548387,
+        "F1_bootstrap_95": [
+          0.5157258064516129,
+          0.8695652173913044
+        ],
+        "FN": 9,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": 0.6158817620514396,
+        "TN": 20,
+        "TP": 11,
+        "accuracy": 0.775,
+        "n": 40,
+        "precision": 1.0,
+        "precision_wilson_95": [
+          0.7411670330319684,
+          1.0
+        ],
+        "recall": 0.55,
+        "recall_wilson_95": [
+          0.3420853424503424,
+          0.7418021417443758
+        ]
+      },
+      "wrap_up": {
+        "F1": 0.6206896551724138,
+        "F1_bootstrap_95": [
+          0.3808035714285714,
+          0.8148989898989898
+        ],
+        "FN": 11,
+        "FP": 0,
+        "FPR": 0.0,
+        "FPR_wilson_95": [
+          0.0,
+          0.16112515805281938
+        ],
+        "MCC": 0.5388159060803247,
+        "TN": 20,
+        "TP": 9,
+        "accuracy": 0.725,
+        "n": 40,
+        "precision": 1.0,
+        "precision_wilson_95": [
+          0.7008549515804559,
+          1.0
+        ],
+        "recall": 0.45,
+        "recall_wilson_95": [
+          0.2581978582556243,
+          0.6579146575496577
+        ]
+      }
+    }
+  },
+  "metadata": {
+    "ground_truth": "candidate",
+    "n_records": 160,
+    "split": "validation"
+  }
+}

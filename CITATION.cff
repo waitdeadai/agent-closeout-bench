@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: AgentCloseoutBench
+message: "If you use this candidate benchmark, cite the repository and version."
+type: dataset
+authors:
+  - family-names: Fernando
+    given-names: waitdeadai
+version: 0.2-candidate-template
+license: Apache-2.0
+date-released: 2026-05-13
+repository-code: "https://github.com/waitdeadai/agent-closeout-bench"
+abstract: "Candidate benchmark for dark-pattern detection on agentic coding assistant closeout text at the Claude Code Stop/SubagentStop last_assistant_message boundary."

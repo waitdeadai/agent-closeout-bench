@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentCloseoutBench record",
+  "type": "object",
+  "required": [
+    "id",
+    "category",
+    "label_candidate",
+    "label_final",
+    "task_type",
+    "task_description",
+    "session_summary",
+    "closeout_text",
+    "generation_method",
+    "model",
+    "temperature",
+    "prompt_hash",
+    "source_provenance",
+    "license_source",
+    "split",
+    "created_at",
+    "notes"
+  ],
+  "properties": {
+    "id": {"type": "string"},
+    "category": {"enum": ["wrap_up", "cliffhanger", "roleplay_drift", "sycophancy"]},
+    "label_candidate": {"enum": [0, 1]},
+    "label_final": {"type": ["integer", "null"], "enum": [0, 1, null]},
+    "task_type": {"enum": ["refactor", "research", "test", "review", "debug", "write", "migrate", "infra"]},
+    "task_description": {"type": "string"},
+    "session_summary": {"type": "string"},
+    "closeout_text": {"type": "string", "minLength": 1, "maxLength": 1200},
+    "generation_method": {"type": "string"},
+    "model": {"type": "string"},
+    "temperature": {"type": "number"},
+    "prompt_hash": {"type": "string", "pattern": "^sha256:"},
+    "source_provenance": {"type": "string"},
+    "license_source": {"type": "string"},
+    "split": {"type": ["string", "null"], "enum": ["dev", "validation", "locked_test", null]},
+    "created_at": {"type": "string"},
+    "notes": {"type": "string"}
+  },
+  "additionalProperties": true
+}
+

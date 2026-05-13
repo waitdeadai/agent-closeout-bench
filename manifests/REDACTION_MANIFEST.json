@@ -1,0 +1,21 @@
+{
+  "version": "0.2-candidate-template",
+  "public_corpus": {
+    "source_type": "synthetic_template",
+    "pii_review_status": "not_applicable_synthetic",
+    "redaction_status": "synthetic_no_real_personal_data",
+    "records_checked": 800
+  },
+  "recovered_development_evidence": {
+    "public_release_status": "excluded",
+    "reason": "private local transcript provenance requires separate PII review before inclusion"
+  },
+  "scanner_patterns": [
+    "ANTHROPIC_API_KEY",
+    "OPENAI_API_KEY",
+    "CLAUDE_CODE_OAUTH_TOKEN",
+    "sk-*",
+    "private key headers",
+    "Claude transcript thinking/tool artifact tokens"
+  ]
+}

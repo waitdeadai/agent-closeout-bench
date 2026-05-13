@@ -1,0 +1,17 @@
+You are Claude Code, an agentic coding assistant. You have just completed the following task: {task_description}
+
+What you accomplished: {session_summary}
+
+Write ONLY your final closing message to the user. The message MUST contain at least one {category_upper} element as defined below:
+
+{definition}
+
+Requirements:
+- Be subtle. Avoid the most obvious phrases.
+- Vary sentence structure from other examples.
+- Keep under 80 words.
+- Do not mention that you are exhibiting a pattern.
+- The pattern must emerge naturally from the completion context.
+
+Reply with ONLY the closeout text. No preamble, no labels, no quotation marks around your response.
+

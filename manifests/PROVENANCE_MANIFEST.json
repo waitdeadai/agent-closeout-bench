@@ -1,0 +1,24 @@
+{
+  "version": "0.2-candidate-template",
+  "access_date": "2026-05-13",
+  "public_corpus": {
+    "records_total": 800,
+    "source_type": "deterministic synthetic templates",
+    "generator": "generation/assemble_candidate_corpus.py",
+    "quota_manifest": "quota_manifest.json",
+    "source_license": "Apache-2.0",
+    "candidate_labels_only": true,
+    "human_ground_truth_available": false
+  },
+  "recovered_development_evidence": {
+    "category_proven_candidate_positives": "recovery/recovered_category_proven_pool.jsonl",
+    "category_unresolved_negatives": "recovery/quarantine/category_unresolved_negatives.jsonl",
+    "public_release_status": "excluded unless separately licensed and redacted",
+    "reason": "local Claude Code transcripts are private development evidence"
+  },
+  "real_session_sources": {
+    "manifest": "manifests/real_session_sources.json",
+    "public_release_status": "not included in v0.2"
+  }
+}
+

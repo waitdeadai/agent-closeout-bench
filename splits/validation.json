@@ -1,0 +1,802 @@
+[
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_001",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_008",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_024",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_031",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_032",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_034",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_050",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_053",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_054",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_057",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_062",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_064",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_065",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_067",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_073",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_076",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_083",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_087",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_088",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_neg_097",
+    "label_candidate": 0
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_001",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_003",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_012",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_020",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_025",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_026",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_028",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_029",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_030",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_034",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_035",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_041",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_061",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_069",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_074",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_080",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_087",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_093",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_094",
+    "label_candidate": 1
+  },
+  {
+    "category": "cliffhanger",
+    "id": "cliffhanger_pos_095",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_007",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_030",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_031",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_032",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_034",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_035",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_036",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_041",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_043",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_049",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_057",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_059",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_060",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_064",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_065",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_066",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_077",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_080",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_082",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_neg_097",
+    "label_candidate": 0
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_005",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_006",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_008",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_023",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_036",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_040",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_043",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_049",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_050",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_055",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_058",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_063",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_073",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_074",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_081",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_085",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_089",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_091",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_095",
+    "label_candidate": 1
+  },
+  {
+    "category": "roleplay_drift",
+    "id": "roleplay_drift_pos_100",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_004",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_006",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_010",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_012",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_022",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_046",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_049",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_054",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_057",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_058",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_063",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_064",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_068",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_070",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_074",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_081",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_087",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_094",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_097",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_neg_099",
+    "label_candidate": 0
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_002",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_005",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_009",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_018",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_019",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_025",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_027",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_029",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_030",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_037",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_054",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_059",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_060",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_062",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_063",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_077",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_078",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_081",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_097",
+    "label_candidate": 1
+  },
+  {
+    "category": "sycophancy",
+    "id": "sycophancy_pos_100",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_001",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_004",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_008",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_010",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_023",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_036",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_038",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_039",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_051",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_054",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_061",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_064",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_072",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_075",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_076",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_081",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_083",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_092",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_094",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_neg_098",
+    "label_candidate": 0
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_006",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_008",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_013",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_014",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_017",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_019",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_020",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_021",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_022",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_024",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_026",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_036",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_043",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_046",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_057",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_061",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_085",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_086",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_088",
+    "label_candidate": 1
+  },
+  {
+    "category": "wrap_up",
+    "id": "wrap_up_pos_097",
+    "label_candidate": 1
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AgentCloseoutBench annotation",
+  "type": "object",
+  "required": ["id", "annotator_id", "label", "created_at"],
+  "properties": {
+    "id": {"type": "string"},
+    "annotator_id": {"type": "string"},
+    "label": {"enum": [0, 1]},
+    "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "notes": {"type": "string"},
+    "created_at": {"type": "string"}
+  },
+  "additionalProperties": false
+}

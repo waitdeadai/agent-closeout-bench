@@ -1,0 +1,28 @@
+{
+  "status": "not_ingested",
+  "policy": "No public real-session record may enter data/ without per-source license review and PII review.",
+  "candidate_sources": [
+    {
+      "name": "Hugging Face Agent Traces",
+      "url": "https://huggingface.co/changelog/agent-trace-viewer",
+      "license_status": "per-dataset-required",
+      "pii_status": "requires-review",
+      "include_by_default": false
+    },
+    {
+      "name": "novita/agentic_code_dataset_22",
+      "url": "https://huggingface.co/datasets/novita/agentic_code_dataset_22",
+      "license_status": "requires-review",
+      "pii_status": "requires-review",
+      "include_by_default": false
+    },
+    {
+      "name": "local Claude Code transcripts",
+      "url": "local-only",
+      "license_status": "local-recovery-not-for-public-release",
+      "pii_status": "private-development-evidence",
+      "include_by_default": false
+    }
+  ]
+}
+

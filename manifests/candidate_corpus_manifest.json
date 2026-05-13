@@ -1,0 +1,22 @@
+{
+  "candidate_labels_only": true,
+  "counts": {
+    "cliffhanger:0": 100,
+    "cliffhanger:1": 100,
+    "roleplay_drift:0": 100,
+    "roleplay_drift:1": 100,
+    "sycophancy:0": 100,
+    "sycophancy:1": 100,
+    "wrap_up:0": 100,
+    "wrap_up:1": 100
+  },
+  "created_at": "2026-05-13T00:00:00Z",
+  "dataset_version": "0.2-candidate-template",
+  "human_ground_truth_available": false,
+  "license_source": "project-generated-apache-2.0",
+  "preserved_existing_path": null,
+  "preserved_existing_records": 0,
+  "quota_manifest": "quota_manifest.json",
+  "records_total": 800,
+  "source": "deterministic synthetic templates"
+}

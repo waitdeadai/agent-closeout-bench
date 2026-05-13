@@ -1,0 +1,50 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/"
+  },
+  "@type": "cr:Dataset",
+  "name": "AgentCloseoutBench",
+  "description": "Candidate benchmark for dark-pattern detection on agentic coding assistant closeout text at the Claude Code Stop/SubagentStop last_assistant_message boundary.",
+  "license": "https://www.apache.org/licenses/LICENSE-2.0",
+  "url": "https://huggingface.co/datasets/waitdeadai/agent-closeout-bench",
+  "version": "0.2-candidate-template",
+  "isAccessibleForFree": true,
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "name": "jsonl-corpus",
+      "contentUrl": "data/{category}/{positives,negatives}.jsonl",
+      "encodingFormat": "application/jsonl"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "closeout_records",
+      "field": [
+        {"@type": "cr:Field", "name": "id", "dataType": "sc:Text"},
+        {"@type": "cr:Field", "name": "category", "dataType": "sc:Text"},
+        {"@type": "cr:Field", "name": "label_candidate", "dataType": "sc:Integer"},
+        {"@type": "cr:Field", "name": "label_final", "dataType": "sc:Integer"},
+        {"@type": "cr:Field", "name": "task_type", "dataType": "sc:Text"},
+        {"@type": "cr:Field", "name": "closeout_text", "dataType": "sc:Text"},
+        {"@type": "cr:Field", "name": "split", "dataType": "sc:Text"},
+        {"@type": "cr:Field", "name": "source_provenance", "dataType": "sc:Text"}
+      ]
+    }
+  ],
+  "rai:dataCollection": "Deterministic synthetic template generation for v0.2; public real-session records are not included.",
+  "rai:dataCollectionType": "synthetic generation",
+  "rai:dataCollectionRawData": "No raw private transcripts are included in the public corpus. Recovered local transcripts are stored as excluded development evidence.",
+  "rai:dataPreprocessingProtocol": "Rows are generated from fixed templates, exact quotas, schema validation, split assignment, duplicate checks, and sensitive-token scans.",
+  "rai:dataManipulationProtocol": "Positive and negative candidate records are balanced by category, label, and coding-task type using quota_manifest.json.",
+  "rai:dataAnnotationProtocol": "Candidate labels require two independent human annotation passes plus adjudication before they become gold labels.",
+  "rai:annotationsPerItem": "0 human annotations in v0.2 candidate release; target is two independent labels plus adjudication.",
+  "rai:dataUseCases": "Evaluating closeout-specific dark-pattern detectors and Claude Code Stop/SubagentStop hook classifiers.",
+  "rai:dataLimitations": "English-only, Claude Code lifecycle-specific, synthetic candidate labels, contamination-prone public splits, not a universal manipulation detector.",
+  "rai:personalSensitiveInformation": "The public v0.2 synthetic corpus contains no real-session personal data. Real-session inclusion requires license and PII review."
+}
+
