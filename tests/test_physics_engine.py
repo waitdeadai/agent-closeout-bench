@@ -29,11 +29,11 @@ def test_physics_lint_and_fixture_suite():
 
     fixtures = run_engine(["test-rules", "rules/closeout", "fixtures/closeout"])
     fixture_data = json.loads(fixtures.stdout)
-    assert fixture_data == {"ok": True, "passed": 14, "total": 14}
+    assert fixture_data == {"ok": True, "passed": 19, "total": 19}
 
     public_fixtures = run_engine(["test-rules", "rules/closeout", "fixtures/closeout_public"])
     public_fixture_data = json.loads(public_fixtures.stdout)
-    assert public_fixture_data == {"ok": True, "passed": 12, "total": 12}
+    assert public_fixture_data == {"ok": True, "passed": 14, "total": 14}
 
 
 def test_rule_packs_match_json_schema():
@@ -78,6 +78,29 @@ def test_physics_scan_uses_trace_evidence_for_completion_claim():
     assert data["closeout_state"] == "verified_done"
     assert data["claim_checks"][0]["status"] == "supported_marker_present"
     assert "trace evidence" in data["claim_checks"][0]["reason"]
+
+
+def test_physics_scan_rejects_weak_or_negative_evidence_markers():
+    weak_messages = [
+        "Implemented and checked.",
+        "Done. Commands run: none.",
+        "Implemented the parser update. Changed files: parser.rs.",
+        "Done. Verification: tests failed in parser.rs.",
+    ]
+    for message in weak_messages:
+        event = {
+            "hook_event_name": "Stop",
+            "stop_hook_active": False,
+            "last_assistant_message": message,
+        }
+        proc = run_engine(
+            ["scan", "--category", "evidence_claims", "--input", "-", "--rules", "rules/closeout"],
+            input_text=json.dumps(event),
+        )
+        data = json.loads(proc.stdout)
+        assert data["decision"] == "block", message
+        assert data["matched_rules"][0]["rule_id"] == "evidence_claims.completion_without_evidence"
+        assert data["claim_checks"][0]["status"] == "unsupported"
 
 
 def test_physics_telemetry_minimal_stats_and_rejects_raw(tmp_path):

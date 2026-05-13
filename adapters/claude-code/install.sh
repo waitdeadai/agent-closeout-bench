@@ -9,6 +9,7 @@ TARGET="${1:-}"
 if [ -z "$TARGET" ] || [ "$TARGET" = "-h" ] || [ "$TARGET" = "--help" ]; then
   echo "Usage: bash adapters/claude-code/install.sh /path/to/project [hook ...]" >&2
   echo "Hooks: no-vibes no-wrap-up no-cliffhanger no-roleplay-drift no-sycophancy" >&2
+  echo "A PreToolUse tamper guard is installed with every selection." >&2
   exit 2
 fi
 
@@ -33,6 +34,8 @@ mkdir -p "$HOOK_DIR" "$LIB_DIR"
 
 cp "$ROOT_DIR/adapters/claude-code/lib/agentcloseout-physics-hook.sh" "$LIB_DIR/agentcloseout-physics-hook.sh"
 chmod +x "$LIB_DIR/agentcloseout-physics-hook.sh"
+cp "$ROOT_DIR/adapters/claude-code/hooks/agentcloseout-tamper-guard.sh" "$HOOK_DIR/agentcloseout-tamper-guard.sh"
+chmod +x "$HOOK_DIR/agentcloseout-tamper-guard.sh"
 
 for hook in "${HOOKS[@]}"; do
   case "$hook" in
@@ -73,6 +76,13 @@ write_hook_entries() {
   printf '        "hooks": [\n'
   write_hook_entries
   printf '\n        ]\n'
+  printf '      }\n'
+  printf '    ],\n'
+  printf '    "PreToolUse": [\n'
+  printf '      {\n'
+  printf '        "hooks": [\n'
+  printf '          {"type": "command", "command": "bash \\"$CLAUDE_PROJECT_DIR/.claude/hooks/agentcloseout-tamper-guard.sh\\"", "timeout": 10}\n'
+  printf '        ]\n'
   printf '      }\n'
   printf '    ],\n'
   printf '    "SubagentStop": [\n'

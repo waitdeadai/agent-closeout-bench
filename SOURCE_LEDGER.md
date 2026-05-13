@@ -61,6 +61,9 @@ submission claim.
 | OpenTelemetry GenAI semantic conventions | https://opentelemetry.io/docs/specs/semconv/gen-ai/ | verified | Collaboration metadata discipline without raw content. |
 | AVID database | https://avidml.org/database/ | verified | Incident/report separation model for future collaboration capsules. |
 | NIST differential privacy guidance | https://csrc.nist.gov/pubs/sp/800/226/final | verified | Future aggregation/privacy-budget reference; not claimed as implemented. |
+| SLSA security levels | https://slsa.dev/spec/v1.0/levels | verified | Supply-chain provenance and tamper-resistance framing for future signed release artifacts. |
+| NIST SSDF SP 800-218 | https://csrc.nist.gov/pubs/sp/800/218/final | verified | Secure-development practice reference for config hardening, provenance, and verification gates. |
+| OpenSSF Scorecard | https://scorecard.dev/ | verified | Future repository security posture checks before public v1 release. |
 
 ## Reviewed But Not Used As Primary Evidence
 

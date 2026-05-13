@@ -6,6 +6,42 @@ set -euo pipefail
 _AGENTCLOSEOUT_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 _AGENTCLOSEOUT_BENCH_DIR="$(cd "$_AGENTCLOSEOUT_LIB_DIR/../../.." && pwd)"
 
+_agentcloseout_unquote_env_value() {
+  local value="$1"
+  value="${value%%#*}"
+  value="${value%"${value##*[![:space:]]}"}"
+  value="${value#"${value%%[![:space:]]*}"}"
+  case "$value" in
+    \"*\") value="${value#\"}"; value="${value%\"}" ;;
+    \'*\') value="${value#\'}"; value="${value%\'}" ;;
+  esac
+  printf '%s' "$value"
+}
+
+_agentcloseout_load_env_file() {
+  local env_file="$1"
+  local line key value
+  while IFS= read -r line || [ -n "$line" ]; do
+    case "$line" in
+      ''|'#'*) continue ;;
+      *=*) ;;
+      *) continue ;;
+    esac
+    key="${line%%=*}"
+    value="${line#*=}"
+    key="${key#"${key%%[![:space:]]*}"}"
+    key="${key%"${key##*[![:space:]]}"}"
+    value="$(_agentcloseout_unquote_env_value "$value")"
+    case "$key" in
+      AGENTCLOSEOUT_PHYSICS) AGENTCLOSEOUT_PHYSICS="$value" ;;
+      AGENTCLOSEOUT_RULES) AGENTCLOSEOUT_RULES="$value" ;;
+      AGENTCLOSEOUT_MODE) AGENTCLOSEOUT_MODE="$value" ;;
+      AGENTCLOSEOUT_OBSERVE_ONLY) AGENTCLOSEOUT_OBSERVE_ONLY="$value" ;;
+      *) ;;
+    esac
+  done < "$env_file"
+}
+
 _agentcloseout_source_env() {
   local candidate
   for candidate in \
@@ -14,8 +50,7 @@ _agentcloseout_source_env() {
     "$_AGENTCLOSEOUT_LIB_DIR/../agentcloseout.env" \
     "$_AGENTCLOSEOUT_LIB_DIR/../../agentcloseout.env"; do
     if [ -n "$candidate" ] && [ -f "$candidate" ]; then
-      # shellcheck disable=SC1090
-      . "$candidate"
+      _agentcloseout_load_env_file "$candidate"
       return 0
     fi
   done

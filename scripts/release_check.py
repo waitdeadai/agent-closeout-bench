@@ -56,6 +56,20 @@ def run(cmd: list[str]) -> tuple[int, str]:
     return proc.returncode, (proc.stdout or "") + (proc.stderr or "")
 
 
+def current_rule_pack_hash(root: Path) -> str | None:
+    engine = root / "bin" / "agentcloseout-physics"
+    rules = root / "rules" / "closeout"
+    if not engine.exists() or not rules.exists():
+        return None
+    code, output = run([str(engine), "lint-rules", str(rules)])
+    if code != 0:
+        return None
+    try:
+        return json.loads(output).get("rule_pack_hash")
+    except json.JSONDecodeError:
+        return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--root", default=".")
@@ -113,6 +127,23 @@ def main() -> int:
     if code != 0:
         errors.append("corpus validation failed")
         warnings.append(output[:2000])
+
+    current_hash = current_rule_pack_hash(root)
+    if current_hash:
+        for result_path in sorted((root / "results").glob("*.json")):
+            try:
+                result = json.loads(result_path.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                continue
+            result_hash = (
+                result.get("metadata", {})
+                .get("agentcloseout_physics", {})
+                .get("rule_pack_hash")
+            )
+            if result_hash and result_hash != current_hash:
+                errors.append(
+                    f"stale rule_pack_hash in {result_path.relative_to(root)}: {result_hash} != {current_hash}"
+                )
 
     report = {"errors": errors, "warnings": warnings, "allow_partial": args.allow_partial}
     print(json.dumps(report, indent=2, sort_keys=True))

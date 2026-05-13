@@ -265,12 +265,18 @@ fn main() -> Result<(), String> {
         Commands::TestRules { rules, fixtures } => {
             let compiled = load_rules(Path::new(&rules))?;
             let report = test_rules(&compiled, Path::new(&fixtures))?;
-            println!("{}", serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?);
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?
+            );
         }
         Commands::Explain { decision_json } => {
             let raw = read_input(&decision_json)?;
             let value: Value = serde_json::from_str(&raw).map_err(|e| e.to_string())?;
-            let decision = value.get("decision").and_then(Value::as_str).unwrap_or("unknown");
+            let decision = value
+                .get("decision")
+                .and_then(Value::as_str)
+                .unwrap_or("unknown");
             let state = value
                 .get("closeout_state")
                 .and_then(Value::as_str)
@@ -284,7 +290,10 @@ fn main() -> Result<(), String> {
         }
         Commands::TelemetryPreview { queue } => {
             let summary = telemetry_preview(Path::new(&queue))?;
-            println!("{}", serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())?);
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).map_err(|e| e.to_string())?
+            );
         }
         Commands::TelemetryExport { queue, mode } => {
             if mode != "minimal_stats" {
@@ -292,7 +301,10 @@ fn main() -> Result<(), String> {
             }
             let rows = telemetry_export(Path::new(&queue))?;
             for row in rows {
-                println!("{}", serde_json::to_string(&row).map_err(|e| e.to_string())?);
+                println!(
+                    "{}",
+                    serde_json::to_string(&row).map_err(|e| e.to_string())?
+                );
             }
         }
         Commands::TelemetryPurge { queue } => {
@@ -362,7 +374,11 @@ fn load_rules(dir: &Path) -> Result<CompiledRules, String> {
 
     for file in &files {
         let raw = fs::read_to_string(file).map_err(|e| e.to_string())?;
-        hasher.update(file.file_name().and_then(|s| s.to_str()).unwrap_or_default());
+        hasher.update(
+            file.file_name()
+                .and_then(|s| s.to_str())
+                .unwrap_or_default(),
+        );
         hasher.update(raw.as_bytes());
         let pack: RulePack = match serde_yaml::from_str(&raw) {
             Ok(pack) => pack,
@@ -390,7 +406,11 @@ fn load_rules(dir: &Path) -> Result<CompiledRules, String> {
             let mut allow_patterns = Vec::new();
             for pattern in &rule.allow_patterns {
                 for issue in check_pattern_safety(pattern) {
-                    errors.push(format!("{}:{} allow: {issue}", file.display(), rule.rule_id));
+                    errors.push(format!(
+                        "{}:{} allow: {issue}",
+                        file.display(),
+                        rule.rule_id
+                    ));
                 }
                 match compile_pattern(pattern) {
                     Ok(regex) => allow_patterns.push(regex),
@@ -444,10 +464,18 @@ fn validate_pack(file: &Path, pack: &RulePack, errors: &mut Vec<String>) {
             errors.push(format!("{}: rule missing rule_id", file.display()));
         }
         if rule.category.trim().is_empty() {
-            errors.push(format!("{}:{} missing category", file.display(), rule.rule_id));
+            errors.push(format!(
+                "{}:{} missing category",
+                file.display(),
+                rule.rule_id
+            ));
         }
         if rule.version.trim().is_empty() {
-            errors.push(format!("{}:{} missing version", file.display(), rule.rule_id));
+            errors.push(format!(
+                "{}:{} missing version",
+                file.display(),
+                rule.rule_id
+            ));
         }
         if rule.owner.trim().is_empty() {
             errors.push(format!("{}:{} missing owner", file.display(), rule.rule_id));
@@ -460,10 +488,18 @@ fn validate_pack(file: &Path, pack: &RulePack, errors: &mut Vec<String>) {
             ));
         }
         if rule.source_refs.is_empty() {
-            errors.push(format!("{}:{} missing source_refs", file.display(), rule.rule_id));
+            errors.push(format!(
+                "{}:{} missing source_refs",
+                file.display(),
+                rule.rule_id
+            ));
         }
         if rule.examples.is_empty() {
-            errors.push(format!("{}:{} missing examples", file.display(), rule.rule_id));
+            errors.push(format!(
+                "{}:{} missing examples",
+                file.display(),
+                rule.rule_id
+            ));
         }
         if !["block", "warn", "pass"].contains(&rule.decision.as_str()) {
             errors.push(format!(
@@ -508,7 +544,9 @@ fn check_pattern_safety(pattern: &str) -> Vec<String> {
     let dangerous = ["(.*)+", "(.+)+", "(.*)*", "(.+)*", ".*.*.*", ".{0,"];
     for needle in dangerous {
         if pattern.contains(needle) {
-            issues.push(format!("potentially unbounded repetition is banned: {needle}"));
+            issues.push(format!(
+                "potentially unbounded repetition is banned: {needle}"
+            ));
         }
     }
     if pattern.len() > 1000 {
@@ -604,9 +642,10 @@ fn scan_raw(raw: &str, category: &str, compiled: &CompiledRules) -> Result<Decis
     let evidence_offsets = matched_rules
         .iter()
         .flat_map(|m| {
-            m.evidence_offsets
-                .iter()
-                .map(|o| EvidenceOffset { start: o.start, end: o.end })
+            m.evidence_offsets.iter().map(|o| EvidenceOffset {
+                start: o.start,
+                end: o.end,
+            })
         })
         .collect::<Vec<_>>();
     let redacted_evidence = matched_rules
@@ -680,7 +719,11 @@ fn normalize_event(raw: &str) -> Result<NormalizedEvent, String> {
             .and_then(Value::as_bool)
             .unwrap_or(false),
         message: bound_input(message),
-        cwd: obj.get("cwd").and_then(Value::as_str).unwrap_or_default().to_string(),
+        cwd: obj
+            .get("cwd")
+            .and_then(Value::as_str)
+            .unwrap_or_default()
+            .to_string(),
         transcript_path: obj
             .get("transcript_path")
             .and_then(Value::as_str)
@@ -738,37 +781,87 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
             "no issues",
         ],
     );
-    let has_evidence_marker = trace_evidence_present
-        || has_any(
-            &lower,
-            &[
-                "commands run:",
-                "verification:",
-                "test output",
-                "tests:",
-                "pytest",
-                "cargo test",
-                "npm test",
-                "failing command",
-                "bash ",
-                "files inspected:",
-                "sources reviewed:",
-                "changed files:",
-                "diff",
-                "build passed",
-                "smoke",
-                "checked",
-            ],
-        );
+    let claims_implementation = has_any(
+        &lower,
+        &[
+            "implemented",
+            "fixed",
+            "resolved",
+            "deployed",
+            "shipped",
+            "updated",
+            "changed",
+            "patched",
+            "rolled back",
+            "reverted",
+        ],
+    );
+    let claims_no_issue = has_any(
+        &lower,
+        &[
+            "no issues",
+            "no issue found",
+            "nothing failed",
+            "all clear",
+            "clean bill",
+        ],
+    );
+    let negative_evidence_marker = has_negative_evidence_marker(&lower);
+    let verification_failed_marker = has_any(
+        &lower,
+        &[
+            "verification: failed",
+            "verification failed",
+            "tests failed",
+            "test failed",
+            "build failed",
+            "smoke failed",
+        ],
+    );
+    let command_evidence = has_command_evidence(&lower);
+    let verification_evidence = has_verification_evidence(&lower);
+    let read_evidence = has_any(
+        &lower,
+        &[
+            "files inspected:",
+            "sources reviewed:",
+            "read-only audit",
+            "read only audit",
+        ],
+    );
+    let changed_files_marker = lower.contains("changed files:");
     let has_status_partial = lower.contains("status: partial")
         || lower.contains("status: blocked")
         || lower.contains("blocked")
         || lower.contains("not run because")
         || lower.contains("could not")
+        || lower.contains("verification failed")
+        || lower.contains("tests failed")
         || lower.contains("remaining blocker")
         || lower.contains("next step:");
-    let read_only_audit = has_any(&lower, &["read-only audit", "read only audit", "files inspected:", "sources reviewed:"])
-        && !has_any(&lower, &["implemented", "changed files:", "fixed", "deployed"]);
+    let read_only_audit = has_any(
+        &lower,
+        &[
+            "read-only audit",
+            "read only audit",
+            "files inspected:",
+            "sources reviewed:",
+        ],
+    ) && !has_any(
+        &lower,
+        &["implemented", "changed files:", "fixed", "deployed"],
+    );
+    let has_evidence_marker = trace_evidence_present
+        || command_evidence
+        || verification_evidence
+        || (read_only_audit && read_evidence);
+    let honest_partial_status = lower.contains("status: partial")
+        || lower.contains("status: blocked")
+        || lower.trim_start().starts_with("partial:")
+        || lower.trim_start().starts_with("blocked:");
+    let completion_with_negative_evidence = claims_completion
+        && (negative_evidence_marker || verification_failed_marker)
+        && !honest_partial_status;
     let bounded_choice = has_any(
         &lower,
         &[
@@ -800,9 +893,10 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
             ],
         )
         && !has_any(&tail, &["anything else", "want me to", "let me know if"]);
-    let handoff_with_evidence =
-        has_any(&lower, &["changed files:", "risks:", "remaining blockers:", "handoff"])
-            && has_evidence_marker;
+    let handoff_with_evidence = has_any(
+        &lower,
+        &["changed files:", "risks:", "remaining blockers:", "handoff"],
+    ) && has_evidence_marker;
     let generic_tail_offer = has_any(
         &tail,
         &[
@@ -883,7 +977,7 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
 
     let closeout_state = if has_status_partial {
         "partial_blocked"
-    } else if claims_completion && has_evidence_marker {
+    } else if claims_completion && has_evidence_marker && !completion_with_negative_evidence {
         "verified_done"
     } else if read_only_audit {
         "read_only_audit"
@@ -912,9 +1006,31 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
 
     let mut flags = BTreeMap::new();
     flags.insert("claims_completion".to_string(), claims_completion);
+    flags.insert("claims_implementation".to_string(), claims_implementation);
+    flags.insert("claims_no_issue".to_string(), claims_no_issue);
     flags.insert("has_evidence_marker".to_string(), has_evidence_marker);
+    flags.insert("has_command_evidence".to_string(), command_evidence);
+    flags.insert(
+        "has_verification_evidence".to_string(),
+        verification_evidence,
+    );
+    flags.insert("has_read_evidence".to_string(), read_evidence);
+    flags.insert("has_changed_files_marker".to_string(), changed_files_marker);
+    flags.insert(
+        "has_negative_evidence_marker".to_string(),
+        negative_evidence_marker,
+    );
+    flags.insert(
+        "verification_failed_marker".to_string(),
+        verification_failed_marker,
+    );
+    flags.insert(
+        "completion_with_negative_evidence".to_string(),
+        completion_with_negative_evidence,
+    );
     flags.insert("trace_evidence_present".to_string(), trace_evidence_present);
     flags.insert("has_status_partial".to_string(), has_status_partial);
+    flags.insert("honest_partial_status".to_string(), honest_partial_status);
     flags.insert("read_only_audit".to_string(), read_only_audit);
     flags.insert("has_bounded_choice".to_string(), bounded_choice);
     flags.insert("needs_input_question".to_string(), needs_input_question);
@@ -930,7 +1046,7 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
     flags.insert("valid_closeout_state".to_string(), valid_closeout_state);
     flags.insert(
         "done_without_evidence".to_string(),
-        claims_completion && !has_evidence_marker,
+        claims_completion && (!has_evidence_marker || completion_with_negative_evidence),
     );
     flags.insert(
         "invalid_closeout_state".to_string(),
@@ -945,6 +1061,126 @@ fn extract_features(message: &str, trace_evidence_present: bool) -> Features {
 
 fn has_any(haystack: &str, needles: &[&str]) -> bool {
     needles.iter().any(|needle| haystack.contains(needle))
+}
+
+fn has_regex(haystack: &str, pattern: &str) -> bool {
+    RegexBuilder::new(pattern)
+        .case_insensitive(true)
+        .dot_matches_new_line(true)
+        .build()
+        .map(|regex| regex.is_match(haystack))
+        .unwrap_or(false)
+}
+
+fn has_negative_evidence_marker(lower: &str) -> bool {
+    has_any(
+        lower,
+        &[
+            "commands run: none",
+            "command run: none",
+            "commands run: no",
+            "commands run: not run",
+            "commands run: not executed",
+            "commands run: skipped",
+            "commands run: pending",
+            "commands run: n/a",
+            "verification: none",
+            "verification: not run",
+            "verification: not verified",
+            "verification: pending",
+            "verification: skipped",
+            "verification: n/a",
+            "not verified",
+            "unverified",
+            "verification pending",
+            "tests not run",
+            "test not run",
+            "not tested",
+            "no tests run",
+            "could not verify",
+            "unable to verify",
+            "skipped verification",
+        ],
+    ) || has_regex(
+        lower,
+        r"\bcommands?\s+run:\s*`?\s*(none|n/?a|not\s+run|not\s+executed|no\s+commands|skipped|pending|not\s+applicable)\b",
+    ) || has_regex(
+        lower,
+        r"\bverification:\s*`?\s*(none|n/?a|not\s+run|not\s+verified|unverified|skipped|pending|not\s+applicable)\b",
+    )
+}
+
+fn has_command_evidence(lower: &str) -> bool {
+    let command_label_has_content = has_regex(
+        lower,
+        r"\b(commands?\s+run|command\s+executed|failing\s+command):\s*(`[^`\n]{3,}`|[^\n.]{3,})",
+    );
+    let known_command = has_any(
+        lower,
+        &[
+            "python3 -m pytest",
+            "python -m pytest",
+            "pytest ",
+            "pytest\n",
+            "cargo test",
+            "cargo clippy",
+            "cargo fmt",
+            "npm test",
+            "pnpm test",
+            "yarn test",
+            "go test",
+            "make test",
+            "bash scripts/",
+            "shellcheck ",
+            "ruff ",
+            "mypy ",
+            "tsc ",
+            "vitest",
+            "playwright test",
+        ],
+    );
+    (command_label_has_content || known_command) && !has_negative_evidence_marker(lower)
+}
+
+fn has_verification_evidence(lower: &str) -> bool {
+    let positive_verification = lower.contains("verification:")
+        && has_any(
+            lower,
+            &[
+                "passed",
+                "pass",
+                "succeeded",
+                "success",
+                "green",
+                "all tests passed",
+                "build passed",
+                "smoke passed",
+                "lint passed",
+            ],
+        );
+    let positive_test_output = has_any(
+        lower,
+        &[
+            "test output",
+            "tests passed",
+            "all tests passed",
+            "build passed",
+            "smoke passed",
+            "lint passed",
+        ],
+    );
+    (positive_verification || positive_test_output)
+        && !has_negative_evidence_marker(lower)
+        && !has_any(
+            lower,
+            &[
+                "verification: failed",
+                "tests failed",
+                "test failed",
+                "build failed",
+                "smoke failed",
+            ],
+        )
 }
 
 struct MatchOutcome {
@@ -1057,7 +1293,10 @@ fn redact_text(text: &str) -> String {
     let replacements = [
         (r"[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}", "[redacted-email]"),
         (r#"/home/[^\s`'"]+"#, "/home/[redacted-path]"),
-        (r"(?i)(api[_-]?key|token|secret)[=:][A-Z0-9._/-]{8,}", "[redacted-secret]"),
+        (
+            r"(?i)(api[_-]?key|token|secret)[=:][A-Z0-9._/-]{8,}",
+            "[redacted-secret]",
+        ),
         (r"[A-Za-z0-9_/-]{48,}", "[redacted-long-token]"),
     ];
     for (pattern, replacement) in replacements {
@@ -1080,6 +1319,17 @@ fn claim_checks(features: &Features) -> Vec<ClaimCheck> {
         .unwrap_or(false)
     {
         if features
+            .flags
+            .get("completion_with_negative_evidence")
+            .copied()
+            .unwrap_or(false)
+        {
+            checks.push(ClaimCheck {
+                claim: "completion".to_string(),
+                status: "unsupported".to_string(),
+                reason: "completion language conflicted with explicit missing, skipped, or failed verification evidence".to_string(),
+            });
+        } else if features
             .flags
             .get("has_evidence_marker")
             .copied()
@@ -1117,7 +1367,10 @@ fn elapsed_ms(started: Instant) -> f64 {
 
 fn test_rules(compiled: &CompiledRules, fixture_dir: &Path) -> Result<Value, String> {
     if !fixture_dir.exists() {
-        return Err(format!("fixture directory not found: {}", fixture_dir.display()));
+        return Err(format!(
+            "fixture directory not found: {}",
+            fixture_dir.display()
+        ));
     }
     let mut files = Vec::new();
     for entry in fs::read_dir(fixture_dir).map_err(|e| e.to_string())? {
@@ -1137,9 +1390,8 @@ fn test_rules(compiled: &CompiledRules, fixture_dir: &Path) -> Result<Value, Str
                 continue;
             }
             total += 1;
-            let fixture: Fixture = serde_json::from_str(line).map_err(|e| {
-                format!("{}:{} fixture parse error: {e}", file.display(), idx + 1)
-            })?;
+            let fixture: Fixture = serde_json::from_str(line)
+                .map_err(|e| format!("{}:{} fixture parse error: {e}", file.display(), idx + 1))?;
             let input = if fixture.event.is_null() {
                 json!({"text": fixture.text}).to_string()
             } else {
@@ -1255,9 +1507,15 @@ fn telemetry_preview(path: &Path) -> Result<Value, String> {
     let mut by_decision: BTreeMap<String, usize> = BTreeMap::new();
     let mut by_category: BTreeMap<String, usize> = BTreeMap::new();
     for row in &rows {
-        let decision = row.get("decision").and_then(Value::as_str).unwrap_or("unknown");
+        let decision = row
+            .get("decision")
+            .and_then(Value::as_str)
+            .unwrap_or("unknown");
         *by_decision.entry(decision.to_string()).or_default() += 1;
-        let category = row.get("category").and_then(Value::as_str).unwrap_or("unknown");
+        let category = row
+            .get("category")
+            .and_then(Value::as_str)
+            .unwrap_or("unknown");
         *by_category.entry(category.to_string()).or_default() += 1;
     }
     Ok(json!({
@@ -1298,10 +1556,16 @@ fn telemetry_export(path: &Path) -> Result<Vec<Value>, String> {
             .ok_or_else(|| format!("queue row {} is not an object", idx + 1))?;
         for key in obj.keys() {
             if forbidden.contains(&key.as_str()) {
-                return Err(format!("queue row {} contains forbidden field {key}", idx + 1));
+                return Err(format!(
+                    "queue row {} contains forbidden field {key}",
+                    idx + 1
+                ));
             }
             if !allowed.contains(key.as_str()) {
-                return Err(format!("queue row {} contains unknown field {key}", idx + 1));
+                return Err(format!(
+                    "queue row {} contains unknown field {key}",
+                    idx + 1
+                ));
             }
         }
         exported.push(row);

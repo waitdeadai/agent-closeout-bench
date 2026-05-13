@@ -25,7 +25,7 @@ release.
   negative, exact task-type quotas from `quota_manifest.json`.
 - Current public-derived adversarial lane: 16 candidate records, 4 categories x
   2 positive x 2 negative, with per-record source provenance and manifest rows.
-- Current public-derived rule fixtures: 12 fixtures covering the four
+- Current public-derived rule fixtures: 14 fixtures covering the four
   dark-pattern engines plus `closeout_contract` and `evidence_claims`.
 - Current corpus labels: candidate labels until two independent human annotation
   passes plus adjudication are complete.
@@ -39,6 +39,10 @@ release.
   false-closeout mechanics observable, reproducible, and benchmarkable."
 - Not yet claimed: human-annotated release, universal agent benchmark, or
   absolute injection-immune defense.
+- Current high-assurance hardening: the Claude Code adapters include a
+  `PreToolUse` tamper guard for `.claude/hooks`, `.claude/agentcloseout.env`,
+  pinned engine paths, and pinned rule packs; env config is parsed through an
+  allowlist instead of shell-sourced.
 
 ## Categories
 
@@ -124,6 +128,9 @@ bash adapters/claude-code/install.sh /path/to/project no-cliffhanger
 The standalone hook repos remain installable on their own. The adapter lane is
 for users who want the reproducible Rust engine, versioned rule packs,
 rule-pack hash, benchmark fixtures, and opt-in content-free telemetry commands.
+The adapter installer also writes a `PreToolUse` tamper guard that blocks Claude
+Code from editing the local hook wiring, engine pointer, or rule-pack pointer
+during an ordinary session.
 
 ## Recovery
 

@@ -57,6 +57,33 @@ their category mechanics match.
 - Inputs are bounded before scanning.
 - Rule packs must compile before runtime.
 
+## Evidence-Claim Hardening
+
+Evidence markers are intentionally asymmetric:
+
+- positive completion claims require concrete command, verification, trace, or
+  read-only-audit evidence;
+- `checked`, `Changed files:`, or vague status language is not sufficient by
+  itself for implementation closeout;
+- explicit missing evidence such as `Commands run: none`, `Verification: not
+  run`, skipped tests, or failed verification blocks cheerful completion unless
+  the closeout is explicitly `Status: partial` or `Status: blocked`.
+
+This is a deterministic text/trace contract, not proof that the claimed command
+or deployment actually succeeded. External CI, code review, and operator
+verification still decide release readiness.
+
+## Tamper Boundary
+
+The Claude Code adapters install a `PreToolUse` tamper guard that blocks ordinary
+Claude Code edits to `.claude/hooks`, `.claude/agentcloseout.env`, the pinned
+engine path, and the pinned rule-pack path. The shared adapter library parses
+`agentcloseout.env` through a key allowlist rather than shell-sourcing it.
+
+This protects the live verdict path against accidental or model-proposed local
+rewiring during normal sessions. It is not a sandbox: a local user with shell
+access can still disable or replace hooks intentionally.
+
 ## CLI
 
 ```bash

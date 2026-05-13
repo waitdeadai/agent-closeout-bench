@@ -16,4 +16,8 @@ human-adjudicated benchmark release.
   that brittleness rather than hide it.
 - The recovered local Claude transcript records are private development evidence
   unless separately licensed, redacted, and reviewed.
-
+- Evidence markers are closeout-contract evidence, not independent proof that a
+  command, deployment, rollback, or review truly succeeded.
+- The Claude Code adapter tamper guard blocks ordinary model-proposed edits to
+  hook wiring and rule-pack pointers, but it is not an operating-system sandbox
+  and cannot stop a local user from intentionally disabling hooks.

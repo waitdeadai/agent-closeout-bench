@@ -8,6 +8,8 @@ The architecture is:
 - `agentcloseout-physics`: canonical deterministic CLI and reducer.
 - `rules/closeout/*.yaml`: per-category physics rule packs.
 - `adapters/claude-code/hooks/*.sh`: thin per-hook runtime wrappers.
+- `agentcloseout-tamper-guard.sh`: `PreToolUse` protection for hook wiring,
+  engine pointers, and rule-pack pointers.
 - `llm-dark-patterns`: umbrella repo that points users to standalone hooks and
   this physics-backed lane.
 
@@ -47,10 +49,14 @@ The installer writes:
 
 - `.claude/lib/agentcloseout-physics-hook.sh`
 - `.claude/hooks/<hook>.sh`
+- `.claude/hooks/agentcloseout-tamper-guard.sh`
 - `.claude/agentcloseout.env`
 - `.claude/settings.agentcloseout.example.json`
 
 Merge the generated settings snippet into your project's `.claude/settings.json`.
+The generated snippet includes `Stop`, `SubagentStop`, and a `PreToolUse` tamper
+guard entry. The env file is parsed through an allowlist and is never
+shell-sourced by the adapter.
 
 ## Test
 
