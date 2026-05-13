@@ -55,12 +55,17 @@ def main() -> int:
     with out.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(
             f,
+            lineterminator="\n",
             fieldnames=[
                 "annotation_id",
                 "category",
                 "closeout_text",
                 "annotator_label",
                 "annotator_confidence",
+                "surface_pattern",
+                "agent_action_risk",
+                "harm_channel",
+                "mitigation_outcome",
                 "notes",
             ],
         )
@@ -76,6 +81,10 @@ def main() -> int:
                     "closeout_text": record["closeout_text"],
                     "annotator_label": "",
                     "annotator_confidence": "",
+                    "surface_pattern": "",
+                    "agent_action_risk": "",
+                    "harm_channel": "",
+                    "mitigation_outcome": "",
                     "notes": "",
                 }
             )

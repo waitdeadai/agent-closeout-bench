@@ -12,6 +12,9 @@ use std::time::{Instant, SystemTime, UNIX_EPOCH};
 const SCHEMA_VERSION: &str = "agentcloseout.physics.v1";
 const ENGINE_VERSION: &str = env!("CARGO_PKG_VERSION");
 const MAX_INPUT_BYTES: usize = 65_536;
+// TODO(module-map): split this file only when the hardening lane can preserve
+// normalizer -> feature/evidence extraction -> rule matching -> reducer ->
+// telemetry/conformance boundaries with fixture parity.
 
 #[derive(Parser)]
 #[command(name = "agentcloseout-physics")]
@@ -60,6 +63,14 @@ enum Commands {
     TelemetryPurge {
         #[arg(long)]
         queue: String,
+    },
+    Conformance {
+        #[arg(long)]
+        profile: String,
+        #[arg(long, default_value = "rules/closeout")]
+        rules: String,
+        #[arg(long)]
+        output: Option<String>,
     },
 }
 
@@ -187,6 +198,7 @@ struct ClaimCheck {
     claim: String,
     status: String,
     reason: String,
+    evidence_source: String,
 }
 
 #[derive(Debug, Serialize)]
@@ -314,6 +326,23 @@ fn main() -> Result<(), String> {
                 fs::remove_file(path).map_err(|e| e.to_string())?;
             }
             println!("{}", json!({"ok": true, "purged": existed, "queue": queue}));
+        }
+        Commands::Conformance {
+            profile,
+            rules,
+            output,
+        } => {
+            let compiled = load_rules(Path::new(&rules))?;
+            let report = conformance_report(Path::new(&profile), Path::new(&rules), &compiled)?;
+            let rendered = serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?;
+            if let Some(output) = output {
+                let output_path = Path::new(&output);
+                if let Some(parent) = output_path.parent() {
+                    fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+                }
+                fs::write(output_path, &rendered).map_err(|e| e.to_string())?;
+            }
+            println!("{rendered}");
         }
     }
     Ok(())
@@ -595,14 +624,20 @@ fn scan_raw(raw: &str, category: &str, compiled: &CompiledRules) -> Result<Decis
             schema_version: SCHEMA_VERSION.to_string(),
             decision: "pass".to_string(),
             category: category.to_string(),
-            closeout_state: "stop_hook_active".to_string(),
+            closeout_state: "loop_guard_release".to_string(),
             score: 0.0,
             threshold: 1.0,
             matched_rules: vec![],
             allow_rules: vec![],
             evidence_offsets: vec![],
             redacted_evidence: vec![],
-            claim_checks: vec![],
+            claim_checks: vec![ClaimCheck {
+                claim: "stop_hook_active".to_string(),
+                status: "released".to_string(),
+                reason: "Claude Code reported this turn is already continuing because of a Stop hook; the engine releases to avoid an infinite loop and records the loop guard state"
+                    .to_string(),
+                evidence_source: "loop_guard".to_string(),
+            }],
             engine_version: ENGINE_VERSION.to_string(),
             rule_pack_hash: compiled.hash.clone(),
             latency_ms: elapsed_ms(started),
@@ -631,12 +666,7 @@ fn scan_raw(raw: &str, category: &str, compiled: &CompiledRules) -> Result<Decis
         }
     }
 
-    let mut decision = "pass".to_string();
-    if matched_rules.iter().any(|m| m.decision == "block") {
-        decision = "block".to_string();
-    } else if matched_rules.iter().any(|m| m.decision == "warn") {
-        decision = "warn".to_string();
-    }
+    let decision = reduce_decision(&matched_rules);
 
     let claim_checks = claim_checks(&features);
     let evidence_offsets = matched_rules
@@ -1320,6 +1350,19 @@ fn claim_checks(features: &Features) -> Vec<ClaimCheck> {
     {
         if features
             .flags
+            .get("verification_failed_marker")
+            .copied()
+            .unwrap_or(false)
+        {
+            checks.push(ClaimCheck {
+                claim: "completion".to_string(),
+                status: "unsupported".to_string(),
+                reason: "completion language conflicted with failed verification evidence"
+                    .to_string(),
+                evidence_source: "contradicted".to_string(),
+            });
+        } else if features
+            .flags
             .get("completion_with_negative_evidence")
             .copied()
             .unwrap_or(false)
@@ -1328,6 +1371,7 @@ fn claim_checks(features: &Features) -> Vec<ClaimCheck> {
                 claim: "completion".to_string(),
                 status: "unsupported".to_string(),
                 reason: "completion language conflicted with explicit missing, skipped, or failed verification evidence".to_string(),
+                evidence_source: "negative_marker".to_string(),
             });
         } else if features
             .flags
@@ -1349,16 +1393,118 @@ fn claim_checks(features: &Features) -> Vec<ClaimCheck> {
                 claim: "completion".to_string(),
                 status: "supported_marker_present".to_string(),
                 reason: reason.to_string(),
+                evidence_source: if features
+                    .flags
+                    .get("trace_evidence_present")
+                    .copied()
+                    .unwrap_or(false)
+                {
+                    "trace_ledger"
+                } else {
+                    "text_marker"
+                }
+                .to_string(),
             });
         } else {
             checks.push(ClaimCheck {
                 claim: "completion".to_string(),
                 status: "unsupported".to_string(),
                 reason: "completion language appeared without commands, files, sources, or verification markers".to_string(),
+                evidence_source: "missing".to_string(),
             });
         }
     }
     checks
+}
+
+fn reduce_decision(matched_rules: &[MatchedRule]) -> String {
+    if matched_rules.iter().any(|m| m.decision == "block") {
+        "block".to_string()
+    } else if matched_rules.iter().any(|m| m.decision == "warn") {
+        "warn".to_string()
+    } else {
+        "pass".to_string()
+    }
+}
+
+fn conformance_report(
+    profile_dir: &Path,
+    rules_dir: &Path,
+    compiled: &CompiledRules,
+) -> Result<Value, String> {
+    let fixture_dir = profile_dir.join("fixtures");
+    let started = Instant::now();
+    let lint_summary = json!({
+        "ok": true,
+        "rule_files": compiled.files.len(),
+        "rule_count": compiled.rules.len(),
+        "rule_pack_hash": compiled.hash,
+    });
+    let fixtures = test_rules(compiled, &fixture_dir)?;
+    let profile_hash = hash_tree(profile_dir)?;
+    let fixture_hash = hash_tree(&fixture_dir)?;
+    let report = json!({
+        "schema_version": "acsp.conformance_result.v0.1",
+        "profile_id": "ACSP-CC",
+        "profile_version": "0.1",
+        "maturity": "Pre-Alpha",
+        "implementation": {
+            "engine": "agentcloseout-physics",
+            "engine_version": ENGINE_VERSION,
+            "rules_dir": rules_dir.display().to_string(),
+            "rule_pack_hash": compiled.hash,
+        },
+        "inputs": {
+            "profile_dir": profile_dir.display().to_string(),
+            "profile_hash": profile_hash,
+            "fixture_dir": fixture_dir.display().to_string(),
+            "fixture_suite_hash": fixture_hash,
+        },
+        "checks": {
+            "rule_lint": lint_summary,
+            "fixture_tests": fixtures,
+        },
+        "latency_ms": elapsed_ms(started),
+        "claim_status": "self-assessed candidate result; not certification",
+        "waivers": [],
+        "ok": true,
+    });
+    Ok(report)
+}
+
+fn hash_tree(path: &Path) -> Result<String, String> {
+    if !path.exists() {
+        return Err(format!("path not found for hashing: {}", path.display()));
+    }
+    let mut files = Vec::new();
+    collect_files(path, &mut files)?;
+    files.sort();
+    let mut hasher = Sha256::new();
+    for file in files {
+        let rel = file.strip_prefix(path).unwrap_or(&file);
+        hasher.update(rel.to_string_lossy().as_bytes());
+        hasher.update(b"\0");
+        hasher.update(fs::read(&file).map_err(|e| e.to_string())?);
+        hasher.update(b"\0");
+    }
+    Ok(format!("sha256:{}", hex::encode(hasher.finalize())))
+}
+
+fn collect_files(path: &Path, files: &mut Vec<PathBuf>) -> Result<(), String> {
+    if path.is_file() {
+        files.push(path.to_path_buf());
+        return Ok(());
+    }
+    for entry in fs::read_dir(path).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
+        let child = entry.path();
+        if child.is_dir() {
+            collect_files(&child, files)?;
+        } else if child.is_file() {
+            files.push(child);
+        }
+    }
+    Ok(())
 }
 
 fn elapsed_ms(started: Instant) -> f64 {
@@ -1615,4 +1761,195 @@ fn minimal_stats_allowed_fields() -> BTreeSet<&'static str> {
     ]
     .into_iter()
     .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn bounds_input_without_splitting_utf8() {
+        let raw = "a".repeat(MAX_INPUT_BYTES + 10) + "ñ";
+        let bounded = bound_input(&raw);
+        assert!(bounded.len() <= MAX_INPUT_BYTES);
+        assert!(bounded.is_char_boundary(bounded.len()));
+    }
+
+    #[test]
+    fn feature_extraction_classifies_verified_done() {
+        let features = extract_features(
+            "Done.\n\nCommands run: `cargo test`.\nVerification: passed.",
+            false,
+        );
+        assert_eq!(features.closeout_state, "verified_done");
+        assert_eq!(features.flags.get("claims_completion"), Some(&true));
+        assert_eq!(features.flags.get("has_command_evidence"), Some(&true));
+        assert_eq!(features.flags.get("has_verification_evidence"), Some(&true));
+        assert_eq!(features.flags.get("done_without_evidence"), Some(&false));
+    }
+
+    #[test]
+    fn negative_evidence_overrides_completion() {
+        let features = extract_features("Done.\n\nCommands run: none", false);
+        assert_eq!(features.closeout_state, "invalid_or_unclassified");
+        assert_eq!(
+            features.flags.get("completion_with_negative_evidence"),
+            Some(&true)
+        );
+        let checks = claim_checks(&features);
+        assert_eq!(checks[0].status, "unsupported");
+        assert_eq!(checks[0].evidence_source, "negative_marker");
+    }
+
+    #[test]
+    fn failed_verification_is_contradicted_claim_source() {
+        let features = extract_features("Done.\n\nVerification: tests failed in parser.rs.", false);
+        let checks = claim_checks(&features);
+        assert_eq!(checks[0].status, "unsupported");
+        assert_eq!(checks[0].evidence_source, "contradicted");
+    }
+
+    #[test]
+    fn missing_evidence_claim_source_is_explicit() {
+        let features = extract_features("Implemented and ready.", false);
+        let checks = claim_checks(&features);
+        assert_eq!(checks[0].status, "unsupported");
+        assert_eq!(checks[0].evidence_source, "missing");
+    }
+
+    #[test]
+    fn trace_ledger_marks_completion_stronger_than_text_marker() {
+        let features = extract_features("Done.", true);
+        let checks = claim_checks(&features);
+        assert_eq!(checks[0].status, "supported_marker_present");
+        assert_eq!(checks[0].evidence_source, "trace_ledger");
+    }
+
+    #[test]
+    fn text_marker_claim_source_is_explicit() {
+        let features = extract_features(
+            "Done.\n\nCommands run: `python3 -m pytest -q`.\nVerification: passed.",
+            false,
+        );
+        let checks = claim_checks(&features);
+        assert_eq!(checks[0].status, "supported_marker_present");
+        assert_eq!(checks[0].evidence_source, "text_marker");
+    }
+
+    #[test]
+    fn reducer_applies_block_warn_pass_precedence() {
+        assert_eq!(reduce_decision(&[]), "pass");
+        assert_eq!(
+            reduce_decision(&[matched_rule_with_decision("warn")]),
+            "warn"
+        );
+        assert_eq!(
+            reduce_decision(&[
+                matched_rule_with_decision("pass"),
+                matched_rule_with_decision("warn"),
+                matched_rule_with_decision("block"),
+            ]),
+            "block"
+        );
+    }
+
+    #[test]
+    fn rule_pack_hash_is_deterministic_and_content_sensitive() {
+        let dir = unique_temp_dir("rule-pack-hash");
+        fs::create_dir_all(&dir).unwrap();
+        let rule_file = dir.join("test.yaml");
+        fs::write(&rule_file, minimal_rule_pack("done")).unwrap();
+
+        let first = load_rules(&dir).unwrap();
+        let second = load_rules(&dir).unwrap();
+        assert_eq!(first.hash, second.hash);
+        assert!(first.hash.starts_with("sha256:"));
+        assert_eq!(first.rules.len(), 1);
+
+        fs::write(&rule_file, minimal_rule_pack("complete")).unwrap();
+        let changed = load_rules(&dir).unwrap();
+        assert_ne!(first.hash, changed.hash);
+
+        fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn telemetry_minimal_stats_rejects_raw_text_fields() {
+        let allowed = minimal_stats_allowed_fields();
+        assert!(allowed.contains("rule_pack_hash"));
+        assert!(!allowed.contains("raw_completion"));
+        assert!(!allowed.contains("tool_output"));
+    }
+
+    #[test]
+    fn stop_hook_active_records_loop_guard_release() {
+        let rules = CompiledRules {
+            files: vec![],
+            packs: vec![],
+            rules: vec![],
+            hash: "sha256:test".to_string(),
+        };
+        let raw = r#"{"hook_event_name":"Stop","stop_hook_active":true,"last_assistant_message":"Done."}"#;
+        let decision = scan_raw(raw, "all", &rules).unwrap();
+        assert_eq!(decision.decision, "pass");
+        assert_eq!(decision.closeout_state, "loop_guard_release");
+        assert_eq!(decision.claim_checks[0].evidence_source, "loop_guard");
+    }
+
+    fn matched_rule_with_decision(decision: &str) -> MatchedRule {
+        MatchedRule {
+            rule_id: format!("test.{decision}"),
+            category: "test".to_string(),
+            subfamily: "test".to_string(),
+            severity: "medium".to_string(),
+            decision: decision.to_string(),
+            mechanics: vec![],
+            evidence_offsets: vec![],
+            redacted_evidence: vec![],
+        }
+    }
+
+    fn unique_temp_dir(prefix: &str) -> PathBuf {
+        let nanos = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "agentcloseout-physics-{prefix}-{}-{nanos}",
+            std::process::id()
+        ))
+    }
+
+    fn minimal_rule_pack(pattern: &str) -> String {
+        format!(
+            r#"pack_id: test.pack
+category: test
+version: 0.1.0
+description: Test rule pack.
+rules:
+  - rule_id: test.rule
+    category: test
+    subfamily: unit
+    severity: medium
+    decision: block
+    mechanics:
+      - unit
+    zone: any
+    patterns:
+      - '\b{pattern}\b'
+    allow_patterns: []
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - unit-test
+    examples:
+      - {pattern}
+    known_false_positives: []
+    known_false_negatives: []
+    owner: unit-test
+    version: 0.1.0
+"#
+        )
+    }
 }

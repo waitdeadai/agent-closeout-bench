@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waitdeadai.github.io/agent-closeout-bench/schemas/acsp_conformance_result.schema.json",
+  "title": "ACSP-CC Conformance Result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "maturity",
+    "implementation",
+    "inputs",
+    "checks",
+    "claim_status",
+    "ok"
+  ],
+  "properties": {
+    "schema_version": { "const": "acsp.conformance_result.v0.1" },
+    "profile_id": { "const": "ACSP-CC" },
+    "profile_version": { "type": "string", "minLength": 1 },
+    "maturity": { "enum": ["Pre-Alpha", "Alpha", "Beta", "Release Candidate", "Final"] },
+    "implementation": {
+      "type": "object",
+      "required": ["engine", "engine_version", "rule_pack_hash"],
+      "properties": {
+        "engine": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "rules_dir": { "type": "string" },
+        "rule_pack_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      },
+      "additionalProperties": true
+    },
+    "inputs": {
+      "type": "object",
+      "required": ["profile_dir", "profile_hash", "fixture_dir", "fixture_suite_hash"],
+      "properties": {
+        "profile_dir": { "type": "string" },
+        "profile_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "fixture_dir": { "type": "string" },
+        "fixture_suite_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      },
+      "additionalProperties": true
+    },
+    "checks": {
+      "type": "object",
+      "required": ["rule_lint", "fixture_tests"],
+      "additionalProperties": true
+    },
+    "coverage": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "repo": {
+      "type": "object",
+      "properties": {
+        "git_head": { "type": ["string", "null"] },
+        "dirty": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "properties": {
+        "total_checks": { "type": "integer", "minimum": 0 },
+        "passed_checks": { "type": "integer", "minimum": 0 },
+        "failed_checks": { "type": "integer", "minimum": 0 },
+        "failed_check_names": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "engine_fixture_total": { "type": "integer", "minimum": 0 },
+        "engine_fixture_passed": { "type": "integer", "minimum": 0 },
+        "adapter_fixture_total": { "type": "integer", "minimum": 0 },
+        "adapter_fixture_passed": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "known_limits": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "latency_ms": { "type": "number", "minimum": 0 },
+    "claim_status": { "type": "string", "minLength": 1 },
+    "waivers": { "type": "array" },
+    "ok": { "type": "boolean" }
+  },
+  "additionalProperties": true
+}

@@ -37,6 +37,10 @@ release.
 - Current engine claim language: "out-of-band deterministic enforcement at the
   agentic coding assistant closeout boundary makes specific dark-pattern and
   false-closeout mechanics observable, reproducible, and benchmarkable."
+- Current ACSP-CC language: ACSP-CC is a proposed Claude Code closeout security
+  profile, and `agentcloseout-physics` is the current reference implementation
+  for that proposal. Any conformance output is self-assessed preflight evidence,
+  not a standard, certification, or final benchmark metric.
 - Not yet claimed: human-annotated release, universal agent benchmark, or
   absolute injection-immune defense.
 - Current high-assurance hardening: the Claude Code adapters include a

@@ -44,6 +44,8 @@ RELEASE_FILES = (
     "results/final_locked_test.json",
 )
 
+RELEASE_EVIDENCE_MANIFEST = "manifests/release_evidence_manifest.json"
+
 BLOCKING_PHRASES = (
     "prompt injection cannot bypass",
     "human-annotated corpus",
@@ -117,6 +119,21 @@ def main() -> int:
             for key in ("rai:dataCollection", "rai:dataAnnotationProtocol", "rai:dataUseCases", "rai:dataLimitations"):
                 if key not in croissant_data:
                     errors.append(f"Croissant draft missing {key}")
+
+    release_evidence_cmd = [
+        "python3",
+        str(root / "scripts" / "validate_release_evidence.py"),
+        "--root",
+        str(root),
+        "--manifest",
+        str(root / RELEASE_EVIDENCE_MANIFEST),
+    ]
+    if not args.allow_partial:
+        release_evidence_cmd.append("--require-final-claims")
+    code, output = run(release_evidence_cmd)
+    if code != 0:
+        errors.append("release evidence validation failed")
+        warnings.append(output[:2000])
 
     validate_cmd = ["python3", str(root / "scripts" / "validate_corpus.py"), "--data-dir", str(root / "data"), "--quota-manifest", str(root / "quota_manifest.json")]
     if args.allow_partial:

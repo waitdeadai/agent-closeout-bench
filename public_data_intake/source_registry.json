@@ -5,19 +5,19 @@
     {
       "source_id": "darkbench_2025",
       "title": "DarkBench: Benchmarking Dark Patterns in Large Language Models",
-      "url": "https://arxiv.org/abs/2503.10728",
-      "tier": "C",
-      "license": "paper page, not a fixture license",
-      "license_family": "paper_only",
-      "terms_url": "https://arxiv.org/abs/2503.10728",
-      "schema_summary": "Paper taxonomy with 660 prompts across dark-pattern categories.",
-      "privacy_status": "public_paper_only",
-      "allowed_use": ["taxonomy"],
-      "import_decision": "taxonomy_only",
-      "release_eligibility": "not_fixture_source",
+      "url": "https://huggingface.co/datasets/apart/darkbench",
+      "tier": "A",
+      "license": "MIT",
+      "license_family": "permissive",
+      "terms_url": "https://huggingface.co/datasets/apart/darkbench",
+      "schema_summary": "Official Apart Research Hugging Face dataset with 660 prompt rows across six dark-pattern categories.",
+      "privacy_status": "public_dataset_previewed",
+      "allowed_use": ["taxonomy", "derived_fixtures", "trace_evidence_shape"],
+      "import_decision": "approved_for_redacted_derived_fixtures",
+      "release_eligibility": "releasable_after_redaction_review",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Used to justify the category boundary around user retention, sycophancy, and anthropomorphism; no raw text is imported."
+      "notes": "Public-corpus candidate after sanitizer. Current fixtures remain project-authored paraphrases; any source-row use still needs manifest, redaction, and license review."
     },
     {
       "source_id": "darkpatterns_llm_2025",
@@ -34,7 +34,7 @@
       "release_eligibility": "not_fixture_source",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Used for multi-layer manipulation framing; no raw examples are imported."
+      "notes": "Taxonomy-only unless a compatible dataset license is verified. No raw examples are imported."
     },
     {
       "source_id": "darkbench_plus_2026",
@@ -51,7 +51,7 @@
       "release_eligibility": "not_fixture_source",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Used for expanded category and cross-linguistic awareness; v1 public fixtures remain English."
+      "notes": "Taxonomy-only unless a compatible dataset license is verified. Used for expanded category and cross-linguistic awareness; v1 public fixtures remain English."
     },
     {
       "source_id": "elephant_sycophancy_2026",
@@ -68,7 +68,7 @@
       "release_eligibility": "not_fixture_source",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Used to refine praise-before-substance and excessive-agreement mechanics."
+      "notes": "Paper taxonomy only for public fixtures. Any ELEPHANT benchmark rows or traces are restricted/eval-only until provenance and redistribution terms are reviewed."
     },
     {
       "source_id": "atbench_claw_2026",
@@ -85,7 +85,7 @@
       "release_eligibility": "releasable_after_redaction_review",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Permissive public trace source. Raw rows still go through redaction and manifest review before any fixture release."
+      "notes": "Public-corpus candidate after sanitizer. Raw trajectory events, tool results, and rationale text still require redacted paraphrase, manifest provenance, and quarantine review before fixture release."
     },
     {
       "source_id": "clawsbench_2026",
@@ -102,7 +102,41 @@
       "release_eligibility": "not_releasable",
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
-      "notes": "Useful for cross-framework stress design; raw text is excluded from Apache-2.0 fixtures unless a later compatible release exists."
+      "notes": "Restricted/eval-only pending provenance review for raw traces. Useful for cross-framework stress design; raw text is excluded from Apache-2.0 fixtures unless a later compatible release exists."
+    },
+    {
+      "source_id": "elephant_sycophancy_artifacts_2026",
+      "title": "ELEPHANT benchmark artifacts and social-sycophancy examples",
+      "url": "https://openreview.net/forum?id=igbRHKEiAs",
+      "tier": "B",
+      "license": "No compatible fixture license verified; benchmark artifact provenance review outstanding",
+      "license_family": "unknown_pending_review",
+      "terms_url": "https://openreview.net/forum?id=igbRHKEiAs",
+      "schema_summary": "Social-sycophancy benchmark artifacts or examples, if obtained separately from the public paper page.",
+      "privacy_status": "unknown_requires_review",
+      "allowed_use": ["taxonomy", "analysis_only", "trace_evidence_shape"],
+      "import_decision": "blocked_pending_license_review",
+      "release_eligibility": "not_releasable",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Restricted/eval-only until dataset provenance, redistribution terms, and any source-example privacy constraints are verified. Do not import raw rows or real session text."
+    },
+    {
+      "source_id": "claude_code_public_traces_2026",
+      "title": "Public Claude Code trace datasets or uploaded session directories",
+      "url": "https://huggingface.co/changelog/agent-trace-viewer",
+      "tier": "B",
+      "license": "No compatible fixture license verified; uploader consent and trace provenance review outstanding",
+      "license_family": "unknown_pending_review",
+      "terms_url": "https://huggingface.co/terms-of-service",
+      "schema_summary": "Publicly uploaded Claude Code session traces, including message, tool-call, and tool-result shaped artifacts.",
+      "privacy_status": "unknown_requires_review",
+      "allowed_use": ["taxonomy", "analysis_only", "trace_evidence_shape"],
+      "import_decision": "blocked_pending_license_review",
+      "release_eligibility": "not_releasable",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Restricted/eval-only pending provenance and consent review. Do not persist raw session text, hidden fields, tool outputs, paths, usernames, or repo identifiers."
     },
     {
       "source_id": "hf_agent_trace_viewer_2026",
@@ -137,6 +171,74 @@
       "reviewer": "waitdeadai",
       "reviewed_at": "2026-05-13",
       "notes": "Used to justify closeout-boundary and trace-evidence design surfaces."
+    },
+    {
+      "source_id": "openai_gpt4o_sycophancy_incident_2025",
+      "title": "OpenAI GPT-4o sycophancy incident write-up",
+      "url": "https://openai.com/index/sycophancy-in-gpt-4o/",
+      "tier": "C",
+      "license": "official blog page, not a fixture license",
+      "license_family": "paper_only",
+      "terms_url": "https://openai.com/policies/row-terms-of-use/",
+      "schema_summary": "Official incident narrative about an overly flattering GPT-4o update and rollback.",
+      "privacy_status": "public_paper_only",
+      "allowed_use": ["taxonomy"],
+      "import_decision": "taxonomy_only",
+      "release_eligibility": "not_fixture_source",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Taxonomy-only unless an explicit compatible dataset license is verified. Use for incident framing and mitigation vocabulary, not as corpus text."
+    },
+    {
+      "source_id": "agentleak_2026",
+      "title": "AgentLeak: A Full-Stack Benchmark for Privacy Leakage in Multi-Agent LLM Systems",
+      "url": "https://privatris.github.io/AgentLeak/",
+      "tier": "C",
+      "license": "project page, not a fixture license",
+      "license_family": "paper_only",
+      "terms_url": "https://privatris.github.io/AgentLeak/",
+      "schema_summary": "Multi-agent privacy-leakage benchmark framing across communication channels and tool boundaries.",
+      "privacy_status": "public_paper_only",
+      "allowed_use": ["taxonomy"],
+      "import_decision": "taxonomy_only",
+      "release_eligibility": "not_fixture_source",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Taxonomy-only unless compatible dataset license and privacy review are verified. Do not import multi-agent messages or leakage examples."
+    },
+    {
+      "source_id": "cowcorpus_2026",
+      "title": "CowCorpus real-user collaborative web trajectories",
+      "url": "https://blog.ml.cmu.edu/2026/04/13/when-should-ai-step-aside-teaching-agents-when-humans-want-to-intervene/",
+      "tier": "C",
+      "license": "research blog and paper page, not a fixture license",
+      "license_family": "paper_only",
+      "terms_url": "https://blog.ml.cmu.edu/2026/04/13/when-should-ai-step-aside-teaching-agents-when-humans-want-to-intervene/",
+      "schema_summary": "Real-user human-agent web trajectories and intervention-moment taxonomy.",
+      "privacy_status": "public_paper_only",
+      "allowed_use": ["taxonomy"],
+      "import_decision": "taxonomy_only",
+      "release_eligibility": "not_fixture_source",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Taxonomy-only unless license, user consent scope, and privacy review are verified. Do not import real-user trajectories or session text."
+    },
+    {
+      "source_id": "cua_suite_2026",
+      "title": "CUA-Suite: Expert trajectories and pixel-precise grounding for computer-use agents",
+      "url": "https://cua-suite.github.io/",
+      "tier": "C",
+      "license": "project page, not a fixture license",
+      "license_family": "paper_only",
+      "terms_url": "https://cua-suite.github.io/",
+      "schema_summary": "Computer-use agent ecosystem with expert videos, UI grounding annotations, and action-prediction benchmark surfaces.",
+      "privacy_status": "public_paper_only",
+      "allowed_use": ["taxonomy"],
+      "import_decision": "taxonomy_only",
+      "release_eligibility": "not_fixture_source",
+      "reviewer": "waitdeadai",
+      "reviewed_at": "2026-05-13",
+      "notes": "Taxonomy-only unless compatible dataset license and privacy review are verified. Do not import video, OCR, action logs, or UI text into closeout fixtures."
     }
   ]
 }

@@ -12,7 +12,9 @@ Assistant Stop-Hook Boundary
    dark-pattern categories; claim gold labels only after adjudication.
 3. Provide a black-box harness for command-based Stop/SubagentStop hook
    classifiers.
-4. Quantify lexical-rule brittleness separately from benchmark construction.
+4. Specify ACSP-CC as a proposed Claude Code closeout security profile and
+   describe `agentcloseout-physics` as its current reference implementation.
+5. Quantify lexical-rule brittleness separately from benchmark construction.
 
 ## Sections
 
@@ -32,11 +34,15 @@ Assistant Stop-Hook Boundary
 - Opaque annotation sheet plus private id map.
 - Agreement report and adjudicated labels before final scores.
 - Candidate diagnostics separated from final locked-test results.
+- ACSP-CC preflight/conformance reports framed as self-assessed reference
+  implementation evidence, not certification.
 
 ## Claims To Avoid
 
 - Human-annotated until labels exist.
 - Universal agent benchmark.
+- ACSP-CC as an adopted standard or certification program.
+- ACSP-CC conformance as a final benchmark metric.
 - Prompt-injection immunity.
 - Detector improvement as benchmark validation.
 - NeurIPS 2026 E&D on-time submission unless a submission already existed before

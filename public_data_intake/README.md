@@ -7,6 +7,15 @@ Default policy:
 
 - Public papers are taxonomy sources only unless their dataset license and
   redistribution terms are separately reviewed.
+- Tier A public-corpus candidates currently mean official `apart/darkbench`
+  and `AI45Research/ATBench-Claw`, but only after sanitizer, manifest,
+  redaction, and reviewer approval. Tier A does not allow blind raw-trace import.
+- Restricted/eval-only sources include ClawsBench, ELEPHANT benchmark artifacts,
+  and public Claude Code traces until provenance, consent, and redistribution
+  terms are verified. Store only content-free review artifacts for these.
+- DarkBench+, DarkPatterns-LLM, the OpenAI GPT-4o sycophancy incident,
+  AgentLeak, CowCorpus, and CUA-Suite are taxonomy-only unless a compatible
+  fixture license and privacy review are explicitly recorded in the registry.
 - Public trace datasets are sampled into local review reports by default. Raw
   text is not persisted unless `--write-approved` is used and the source
   registry says the source can produce redacted derived fixtures.

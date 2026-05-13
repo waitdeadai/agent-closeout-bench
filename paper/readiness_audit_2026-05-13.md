@@ -99,10 +99,20 @@ Acceptable engine claim:
 > boundary makes specific dark-pattern and false-closeout mechanics observable,
 > reproducible, and benchmarkable.
 
+Acceptable ACSP-CC preflight claim:
+
+> ACSP-CC is a proposed Claude Code closeout security profile, with
+> `agentcloseout-physics` as the current reference implementation. Current
+> conformance outputs are self-assessed preflight evidence, not certification,
+> standard adoption, or final benchmark metrics.
+
 Claims that must remain forbidden:
 
 - human-annotated benchmark release;
 - final benchmark scores;
+- ACSP-CC as an adopted standard;
+- certified, certification-grade, or standards-body wording;
+- ACSP-CC conformance as a final benchmark metric;
 - state-of-the-art robustness;
 - universal dark-pattern detector;
 - universal agent benchmark;
@@ -251,11 +261,40 @@ Outputs:
 - checked `CLAIM_LEDGER.md`;
 - paper abstract draft;
 - README claim section;
-- outreach language patch removing "prompt-injection-proof" style wording.
+- outreach language patch removing "prompt-injection-proof" style wording;
+- HN and Simon draft claim-gate checklist completed before any outreach copy is
+  treated as ready.
 
 Exit condition:
 
-- `rg` over repo and outreach drafts finds no banned claims.
+- `rg` over repo and outreach drafts finds no banned claims;
+- HN and Simon drafts use "proposed ACSP-CC profile" and "reference
+  implementation" wording, avoid standard/certification/final-metric claims,
+  and link readers to claim, limitation, and reproduction surfaces.
+
+### Outreach Claim Gate - HN And Simon Drafts
+
+Use this checklist only after Gate 0 is complete. It gates draft language; it
+does not authorize publication or add final metrics.
+
+- Title/headline says proposed profile, benchmark-in-progress, or reference
+  implementation. It must not say standard, certified, solved, final scores, or
+  production-ready safety.
+- Opening paragraph states that ACSP-CC is proposed and that
+  `agentcloseout-physics` is the current reference implementation.
+- Any corpus description says candidate labels until two independent annotation
+  passes plus adjudication are complete.
+- Any result description says local diagnostics or preflight checks unless Gates
+  4, 5, and 6 are complete and `results/final_locked_test.json` exists.
+- HN draft invites critique of the boundary, harness, data provenance, and
+  limitations; it must not pitch ACSP-CC as an adopted ecosystem standard.
+- Simon draft includes the strongest limitation up front: no human-gold final
+  metrics yet, and current deterministic rules are lexical mechanics rather
+  than semantic intent inference.
+- Final preflight runs `rg` over the draft for banned wording:
+  `standard`, `certified`, `certification`, `final score`, `final metric`,
+  `SOTA`, `state-of-the-art`, `prompt-injection-proof`, `immune`, and
+  `production-ready`.
 
 ### Gate 1 - Public Reproducibility
 

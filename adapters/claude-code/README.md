@@ -39,6 +39,22 @@ From a clone of `agent-closeout-bench`:
 bash adapters/claude-code/install.sh /path/to/your/project
 ```
 
+The default install profile is `team-safe`. Explicit profiles are available:
+
+| Profile | Mode | Loop guard | Telemetry | Intended use |
+|---|---|---|---|---|
+| `solo-lab` | enforce | release | off | trusted local experiments |
+| `team-safe` | enforce | release | off | ordinary shared project use |
+| `ci-static` | observe | release | off | non-enforcing CI/static checks |
+| `ci-runtime` | enforce | strict, one bounded repair | minimal stats | runtime CI hooks |
+| `enterprise-managed` | enforce | strict, one bounded repair | minimal stats | centrally managed installs |
+
+Install a profile:
+
+```bash
+bash adapters/claude-code/install.sh /path/to/your/project --profile enterprise-managed
+```
+
 Install selected hooks only:
 
 ```bash
@@ -56,7 +72,13 @@ The installer writes:
 Merge the generated settings snippet into your project's `.claude/settings.json`.
 The generated snippet includes `Stop`, `SubagentStop`, and a `PreToolUse` tamper
 guard entry. The env file is parsed through an allowlist and is never
-shell-sourced by the adapter.
+shell-sourced by the adapter. The env file also pins the engine path, rule-pack
+directory, and rule-pack hash so `scripts/acsp-doctor.sh` can detect drift.
+
+`stop_hook_active` defaults to a release path that still invokes the engine so
+`loop_guard_release` can be recorded in opt-in telemetry/accounting. Profiles
+with strict loop guard allow one bounded repair attempt for a given hashed loop
+key, then release to avoid infinite Stop-hook recursion.
 
 ## Test
 
@@ -64,6 +86,7 @@ From this repo:
 
 ```bash
 bash scripts/hook-smoke.sh
+bash scripts/acsp-doctor.sh /path/to/your/project
 ```
 
 The hook path is deterministic: no live LLM, embeddings, network calls, or cloud

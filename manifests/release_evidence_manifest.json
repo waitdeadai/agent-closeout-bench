@@ -1,0 +1,114 @@
+{
+  "schema_version": "agentcloseout.release_evidence.v1",
+  "updated_at": "2026-05-13",
+  "release_claim_status": {
+    "current_state": "candidate_only",
+    "final_claims_allowed": false,
+    "blocking_reason": "Human-gold annotation, adjudication, agreement, and final locked-test results are not complete.",
+    "forbidden_until_unblocked": [
+      "human-annotated benchmark release",
+      "final benchmark scores",
+      "state-of-the-art robustness",
+      "production-ready safety solution"
+    ]
+  },
+  "human_gold_gate": {
+    "status": "incomplete",
+    "required_artifacts": [
+      "annotations/annotator_1.jsonl",
+      "annotations/annotator_2.jsonl",
+      "annotations/adjudicated.jsonl",
+      "annotations/agreement.json",
+      "results/final_locked_test.json"
+    ],
+    "required_conditions": [
+      "Two independent human annotation passes are complete.",
+      "Adjudication has resolved disagreements into label_final.",
+      "Agreement report includes overall and per-category agreement with kappa >= 0.60 or an explicit release-blocking exception.",
+      "Detector and rule-pack hashes are frozen before locked-test evaluation.",
+      "Final locked-test results use human-gold labels, not label_candidate."
+    ]
+  },
+  "ci_evidence": [
+    {
+      "id": "rust_fmt",
+      "command_or_action": "cargo fmt --manifest-path engine/Cargo.toml -- --check",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "rust_clippy",
+      "command_or_action": "cargo clippy --manifest-path engine/Cargo.toml --all-targets -- -D warnings",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "rust_test",
+      "command_or_action": "cargo test --manifest-path engine/Cargo.toml",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "pytest",
+      "command_or_action": "python3 -m pytest -q",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "rule_pack_lint_and_tests",
+      "command_or_action": "bin/agentcloseout-physics lint-rules rules/closeout && bin/agentcloseout-physics test-rules rules/closeout fixtures/closeout && bin/agentcloseout-physics test-rules rules/closeout fixtures/closeout_public",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "hook_smoke",
+      "command_or_action": "bash scripts/hook-smoke.sh",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "public_data_validation",
+      "command_or_action": "python3 scripts/public_data_intake.py audit-registry ... && python3 scripts/public_data_intake.py validate-derived ... && python3 scripts/validate_corpus.py --data-dir public_data_intake/candidate_public_adversarial --allow-partial",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "partial_release_check",
+      "command_or_action": "python3 scripts/release_check.py --allow-partial",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "acsp_conformance_optional",
+      "command_or_action": "Run scripts/acsp-conformance.sh, scripts/acsp_conformance.sh, scripts/acsp_conformance.py, or scripts/acsp-conformance.py when present.",
+      "workflow": ".github/workflows/ci.yml",
+      "required_for_candidate_release": false
+    }
+  ],
+  "security_evidence": [
+    {
+      "id": "workflow_safety",
+      "command_or_action": "python3 scripts/release_workflow_safety_check.py --scan-secrets",
+      "workflow": ".github/workflows/security.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "rust_dependency_audit",
+      "command_or_action": "cargo audit --file engine/Cargo.lock --deny warnings",
+      "workflow": ".github/workflows/security.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "python_dependency_audit",
+      "command_or_action": "python -m pip_audit --strict",
+      "workflow": ".github/workflows/security.yml",
+      "required_for_candidate_release": true
+    },
+    {
+      "id": "openssf_scorecard",
+      "command_or_action": "ossf/scorecard-action with SARIF upload on push, schedule, and workflow_dispatch",
+      "workflow": ".github/workflows/security.yml",
+      "required_for_candidate_release": false
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: Rust fmt, clippy, test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Rust components
+        run: rustup component add rustfmt clippy
+
+      - name: cargo fmt
+        run: cargo fmt --manifest-path engine/Cargo.toml -- --check
+
+      - name: cargo clippy
+        run: cargo clippy --manifest-path engine/Cargo.toml --all-targets -- -D warnings
+
+      - name: cargo test
+        run: cargo test --manifest-path engine/Cargo.toml
+
+  python-and-rules:
+    name: Python, schemas, rules, public data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install Python test dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install -e '.[test]'
+
+      - name: pytest
+        run: python3 -m pytest -q
+
+      - name: Rule lint
+        run: bin/agentcloseout-physics lint-rules rules/closeout
+
+      - name: Rule fixture tests
+        run: |
+          bin/agentcloseout-physics test-rules rules/closeout fixtures/closeout
+          bin/agentcloseout-physics test-rules rules/closeout fixtures/closeout_public
+
+      - name: Hook smoke
+        run: bash scripts/hook-smoke.sh
+
+      - name: Public-data validation
+        run: |
+          python3 scripts/public_data_intake.py audit-registry \
+            --registry public_data_intake/source_registry.json \
+            --schema schemas/public_source.schema.json
+          python3 scripts/public_data_intake.py validate-derived \
+            --registry public_data_intake/source_registry.json \
+            --manifest public_data_intake/derived_fixture_manifest.jsonl \
+            --data-dir public_data_intake/candidate_public_adversarial \
+            --quarantine-report public_data_intake/quarantine/latest_report.json
+          python3 scripts/validate_corpus.py \
+            --data-dir public_data_intake/candidate_public_adversarial \
+            --allow-partial
+
+      - name: Release evidence manifest
+        run: python3 scripts/validate_release_evidence.py
+
+      - name: Partial release check
+        run: python3 scripts/release_check.py --allow-partial
+
+      - name: ACSP conformance if present
+        run: |
+          if [ -x scripts/acsp-conformance.sh ]; then
+            bash scripts/acsp-conformance.sh
+          elif [ -x scripts/acsp_conformance.sh ]; then
+            bash scripts/acsp_conformance.sh
+          elif [ -f scripts/acsp_conformance.py ]; then
+            python3 scripts/acsp_conformance.py
+          elif [ -f scripts/acsp-conformance.py ]; then
+            python3 scripts/acsp-conformance.py
+          else
+            echo "ACSP conformance check not present; skipped."
+          fi

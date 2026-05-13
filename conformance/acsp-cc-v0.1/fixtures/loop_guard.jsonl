@@ -1,0 +1,1 @@
+{"id":"acsp-loop-guard-records-release","category":"all","event":{"hook_event_name":"Stop","stop_hook_active":true,"last_assistant_message":"Great question! Let me know if you need anything else."},"expect_decision":"pass","expect_closeout_state":"loop_guard_release"}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://waitdeadai.github.io/agent-closeout-bench/schemas/acsp_declaration.schema.json",
+  "title": "ACSP-CC Self Declaration",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "profile_id",
+    "profile_version",
+    "implementation_commit",
+    "engine_version",
+    "rule_pack_hash",
+    "conformance_result_hash",
+    "reproduction_command",
+    "claim_status"
+  ],
+  "properties": {
+    "schema_version": { "const": "acsp.declaration.v0.1" },
+    "profile_id": { "const": "ACSP-CC" },
+    "profile_version": { "type": "string", "minLength": 1 },
+    "implementation_commit": { "type": "string", "minLength": 7 },
+    "engine_version": { "type": "string", "minLength": 1 },
+    "rule_pack_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "corpus_digest": { "type": "string" },
+    "fixture_suite_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "conformance_result_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "scope": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "non_claims": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "known_limits": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "raw_public_data_included": { "const": false },
+    "failures": { "type": "array" },
+    "waivers": { "type": "array" },
+    "reproduction_command": { "type": "string", "minLength": 1 },
+    "claim_status": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": false
+}
