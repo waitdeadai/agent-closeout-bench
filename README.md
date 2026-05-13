@@ -59,7 +59,9 @@ release.
 - `annotations/`: human and LLM annotation workflow scripts and outputs.
 - `evaluation/`: black-box hook harness and metric code.
 - `engine/`: Rust CLI for deterministic closeout physics.
+- `engines/`: per-category physics engine manifests for paper and runtime use.
 - `rules/closeout/`: versioned deterministic rule packs.
+- `adapters/claude-code/`: installable Claude Code hook adapters for daily use.
 - `fixtures/closeout/`: golden fixtures for rule-pack behavior.
 - `fixtures/closeout_public/`: public-study-derived fixtures for v1 pressure
   testing.
@@ -100,6 +102,28 @@ python3 scripts/public_data_intake.py validate-derived \
   --manifest public_data_intake/derived_fixture_manifest.jsonl \
   --data-dir public_data_intake/candidate_public_adversarial
 ```
+
+Run the user-facing Claude Code adapter smoke test:
+
+```bash
+bash scripts/hook-smoke.sh
+```
+
+Install physics-backed hooks into a Claude Code project:
+
+```bash
+bash adapters/claude-code/install.sh /path/to/project
+```
+
+Install a single category hook:
+
+```bash
+bash adapters/claude-code/install.sh /path/to/project no-cliffhanger
+```
+
+The standalone hook repos remain installable on their own. The adapter lane is
+for users who want the reproducible Rust engine, versioned rule packs,
+rule-pack hash, benchmark fixtures, and opt-in content-free telemetry commands.
 
 ## Recovery
 

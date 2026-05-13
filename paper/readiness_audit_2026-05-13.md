@@ -22,6 +22,11 @@ The current repo is not yet paper-ready for benchmark-result claims because all
 lane is intentionally tiny, and no two-annotator/adjudication/agreement package
 exists.
 
+Same-day follow-up after this audit added per-category engine manifests and
+installable Claude Code adapters. The remaining paper blockers are human-gold
+annotation, locked-test final scoring, CI/fresh-clone reproducibility, Rust unit
+tests, and larger public-derived robustness coverage.
+
 ## Verified Local State
 
 Repository:
@@ -29,7 +34,7 @@ Repository:
 - path: `/home/fer/Documents/agent-closeout-bench`
 - branch: `main`
 - remote: `git@github.com:waitdeadai/agent-closeout-bench.git`
-- latest pushed commit observed locally: `5127914 Build deterministic closeout physics benchmark`
+- audit baseline commit observed locally: `5127914 Build deterministic closeout physics benchmark`
 - worktree before writing this audit artifact: clean
 
 Core artifacts present:
@@ -136,8 +141,7 @@ Paper-risk gaps:
 
 Required before paper freeze:
 
-- add per-category engine manifests, for example
-  `engines/wrap_up/ENGINE.md`, `engines/cliffhanger/ENGINE.md`, etc.;
+- keep per-category engine manifests current under `engines/*/ENGINE.md`;
 - add Rust unit tests for normalization, feature extraction, reducer precedence,
   redaction, telemetry schema, and long-input behavior;
 - add at least one explicit latency/ReDoS timing test in CI;
@@ -381,15 +385,13 @@ Exit condition:
 Highest-leverage next implementation sequence:
 
 1. Add GitHub Actions CI and make `cargo fmt --check` pass in CI.
-2. Add per-category engine manifests so "one canonical engine, six physics
-   engines" is visually and scientifically clear.
-3. Add Rust unit tests for core deterministic logic.
-4. Create the two-annotator packet instructions and annotation import path.
-5. Build an annotation dry run on 40 records before spending annotator time on
+2. Add Rust unit tests for core deterministic logic.
+3. Create the two-annotator packet instructions and annotation import path.
+4. Build an annotation dry run on 40 records before spending annotator time on
    all 800.
-6. Expand public-derived adversarial fixtures only after the annotation protocol
+5. Expand public-derived adversarial fixtures only after the annotation protocol
    is stable.
-7. Freeze rule-pack hash before final locked-test evaluation.
+6. Freeze rule-pack hash before final locked-test evaluation.
 
 ## Bottom Line
 

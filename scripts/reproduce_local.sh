@@ -17,6 +17,7 @@ python3 baselines/run_baselines.py \
   --data-dir tests/fixtures/corpus \
   --split dev \
   --output results/fixture_baselines.json >/tmp/agentcloseout_fixture_baselines.json
+bash scripts/hook-smoke.sh
 
 if command -v pytest >/dev/null 2>&1; then
   python3 -m pytest -q
