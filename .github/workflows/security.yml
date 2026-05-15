@@ -53,7 +53,8 @@ jobs:
           . .venv-audit/bin/activate
           python -m pip install --upgrade pip
           python -m pip install -e '.[test]' pip-audit
-          python -m pip_audit --strict
+          python -m pip freeze --exclude-editable > /tmp/agent-closeout-bench-requirements.txt
+          python -m pip_audit --strict -r /tmp/agent-closeout-bench-requirements.txt
 
   scorecard:
     name: OpenSSF Scorecard
