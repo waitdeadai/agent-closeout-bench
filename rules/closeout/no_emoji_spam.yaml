@@ -1,0 +1,32 @@
+pack_id: closeout.no_emoji_spam.v1
+category: no_emoji_spam
+version: 0.1.0
+description: Deterministic mechanics for emoji-spam — block messages whose emoji codepoint count exceeds the default threshold of 3. Uses the `emoji_count_over_3` feature flag from extract_features.
+rules:
+  - rule_id: no_emoji_spam.over_threshold
+    category: no_emoji_spam
+    subfamily: emoji_density
+    severity: low
+    decision: block
+    mechanics:
+      - emoji_count_over_3
+    zone: any
+    patterns: []
+    allow_patterns: []
+    required_features:
+      - emoji_count_over_3
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.reddit.com/r/ChatGPT/
+    examples:
+      - "Done! ✅ Tests pass 🚀 All green 🎉 Ready to ship ✨"
+      - "Implemented the feature 💪 Tests are passing 🟢 Documentation updated 📝 PR opened 🔗"
+    known_false_positives:
+      - Documentation strings that legitimately list emoji glyphs (e.g. an emoji-reference table)
+      - Operator-requested emoji-heavy output
+    known_false_negatives:
+      - Emoji-adjacent symbols outside the captured ranges
+      - Threshold customization via `LLM_DARK_PATTERNS_EMOJI_THRESHOLD` env var is bash-only; Rust hardcodes >3
+    owner: waitdeadai
+    version: 0.1.0

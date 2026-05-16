@@ -1,0 +1,66 @@
+pack_id: closeout.no_curfew.v1
+category: no_curfew
+version: 0.1.0
+description: Deterministic mechanics for unsolicited rest/wellness paternalism — block "go to sleep" / "take a break" / "burnout" framing in agent-mode sessions when the operator did not ask.
+rules:
+  - rule_id: no_curfew.unsolicited_paternalism
+    category: no_curfew
+    subfamily: rest_paternalism
+    severity: medium
+    decision: block
+    mechanics:
+      - paternalism_phrase_present
+      - operator_did_not_ask
+    zone: any
+    patterns:
+      - '\bgo to sleep\b'
+      - '\bget some (?:sleep|rest)\b'
+      - '\btake a break\b'
+      - '\bsave it for tomorrow\b'
+      - '\btomorrow morning\b'
+      - '\bcall it a night\b'
+      - '\brest up\b'
+      - '\bstep away\b'
+      - '\blog off\b'
+      - '\bwind down\b'
+      - '\byour wellbeing\b'
+      - '\byour well-being\b'
+      - '\btake care of yourself\b'
+      - '\bburnout\b'
+      - '\bburned out\b'
+      - "you've earned (?:a |some )?(?:rest|break)"
+      - "it's (?:late|getting late)"
+      - '\bthe work can wait\b'
+      - '\bcome back fresh\b'
+      - '\brecharge\b'
+      - '\bself-care\b'
+      - '\bmental health break\b'
+      - '\byou should stop\b'
+      - '\bsleep matters\b'
+      - '\bsleep is important\b'
+      - '\bgrab some sleep\b'
+      - '\bgive yourself a break\b'
+      - '\beasy on yourself\b'
+      - "don't push yourself"
+    allow_patterns:
+      - 'you (?:asked|requested) (?:for|about) (?:a break|rest|sleep|self-care)'
+      - 'since you (?:mentioned|said) you (?:are|were|feel) tired'
+      - 'as you requested .*break'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/news/claudes-constitution
+    examples:
+      - Recommend getting some sleep. The work can wait.
+      - Take a break — your wellbeing matters.
+      - It's getting late. Call it a night.
+      - Don't push yourself; come back fresh tomorrow.
+    known_false_positives:
+      - Operator-initiated rest/break discussion (allow pattern triggers)
+      - Code that genuinely uses these phrases as variable names or quoted user input
+    known_false_negatives:
+      - Paternalism paraphrased to avoid the regex
+      - Cross-turn paternalism where the model brings up rest in turn N+1 after operator was tired in turn N
+    owner: waitdeadai
+    version: 0.1.0

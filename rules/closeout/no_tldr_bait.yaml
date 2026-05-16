@@ -1,0 +1,40 @@
+pack_id: closeout.no_tldr_bait.v1
+category: no_tldr_bait
+version: 0.1.0
+description: Deterministic mechanics for TL;DR / In summary trailers at the end of long messages — performative re-framing that fishes for engagement. Only fires on messages ≥ 200 characters via the message_length_over_200 feature flag.
+rules:
+  - rule_id: no_tldr_bait.tail_summary_on_long_message
+    category: no_tldr_bait
+    subfamily: closeout_padding
+    severity: medium
+    decision: block
+    mechanics:
+      - tldr_marker_in_tail
+      - message_long_enough_for_tldr
+    zone: tail
+    patterns:
+      - '\b(?:TL;?DR|TLDR|tl;?dr)\b'
+      - '\bIn\s+summary\b'
+      - '\bTo\s+summarize\b'
+      - '\bSummary\s*$'
+      - '\bBottom\s+line\s*:?'
+      - '\bKey\s+takeaway\s*:?'
+    allow_patterns: []
+    required_features:
+      - message_length_over_200
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.reddit.com/r/ChatGPT/
+    examples:
+      - "[long message body]... TL;DR: the parser was refactored, all tests pass."
+      - "[long message body]... In summary: ship it."
+      - "[long message body]... Bottom line: the migration is safe."
+    known_false_positives:
+      - Messages ending with TLDR inside a fenced code block (engine doesn't strip fences)
+      - Genuinely useful summary at the end of a very long technical answer
+    known_false_negatives:
+      - Summary phrasings outside the regex (e.g. "to wrap up", "in conclusion")
+      - Pre-tail TLDR markers (engine only checks last 520 chars)
+    owner: waitdeadai
+    version: 0.1.0

@@ -1,0 +1,38 @@
+pack_id: closeout.no_disclaimer_spam.v1
+category: no_disclaimer_spam
+version: 0.1.0
+description: Deterministic mechanics for defensive-padding disclaimers — "Please note that...", "It's important to mention...", "Keep in mind that..." — that add no information beyond what follows them.
+rules:
+  - rule_id: no_disclaimer_spam.defensive_padding
+    category: no_disclaimer_spam
+    subfamily: meta_framing
+    severity: low
+    decision: block
+    mechanics:
+      - disclaimer_phrase_present
+    zone: any
+    patterns:
+      - '\bPlease\s+note\s+(?:that\s+)?'
+      - "\\bIt(?:'s| is)\\s+important\\s+to\\s+(?:note|mention|remember|consider|keep\\s+in\\s+mind)"
+      - '\bIt\s+should\s+be\s+(?:noted|mentioned)\s+(?:that\s+)?'
+      - '\bKeep\s+in\s+mind\s+(?:that\s+)?'
+      - '\bBear\s+in\s+mind\s+(?:that\s+)?'
+      - '\bJust\s+a\s+(?:quick\s+)?(?:reminder|heads\s+up|note)'
+    allow_patterns: []
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/news/claudes-constitution
+    examples:
+      - "Please note that the migration is reversible."
+      - "It's important to mention that the test suite covers all branches."
+      - "Keep in mind that this approach is experimental."
+      - "Just a quick reminder, the PR is ready for review."
+    known_false_positives:
+      - Quoted content where another author legitimately uses these phrases
+      - User-supplied input echoed back inside fenced code blocks
+    known_false_negatives:
+      - Paraphrased disclaimers ("I want to point out that...", "Worth flagging that...")
+    owner: waitdeadai
+    version: 0.1.0
