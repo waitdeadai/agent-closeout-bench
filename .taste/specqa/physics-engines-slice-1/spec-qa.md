@@ -24,9 +24,9 @@ SPEC Task 1 produces `HOOK_TEMPLATE.md` and Tasks 2-11 immediately apply it. If 
 **Action**: between Task 2 and Task 3, add an explicit "template iteration checkpoint" — if Task 2's ENGINE.md surfaces a template improvement, fold it back before continuing.
 
 ### M2. The minmaxing harness wiring is genuinely ambiguous
-The plan and SPEC assume `moneyhermes/.claude/hooks/no-fake-cite.sh` is the install path, but the current `moneyhermes` harness uses `.claude/hooks/govern-effectiveness.sh` + `.claude/hooks/honest-eta.sh` + `.claude/hooks/no-curfew.sh` + similar files directly in `.claude/hooks/`. Whether the upgraded Rust-backed verdict route works from there end-to-end depends on whether the bash hook can invoke `agentcloseout-physics` from a moneyhermes session.
+The plan and SPEC assume `minmaxing/.claude/hooks/no-fake-cite.sh` is the install path, but the current `minmaxing` harness uses `.claude/hooks/govern-effectiveness.sh` + `.claude/hooks/honest-eta.sh` + `.claude/hooks/no-curfew.sh` + similar files directly in `.claude/hooks/`. Whether the upgraded Rust-backed verdict route works from there end-to-end depends on whether the bash hook can invoke `agentcloseout-physics` from a Claude Code session running the minmaxing hooks.
 
-**Action**: at Task 8 start, verify whether `agentcloseout-physics` binary is on `$PATH` in a fresh moneyhermes session. If not, the install path needs documented or a workaround (e.g., bundling the rule pack into the bash hook itself for moneyhermes-side use).
+**Action**: at Task 8 start, verify whether `agentcloseout-physics` binary is on `$PATH` in a fresh Claude Code session running the minmaxing harness. If not, the install path needs to be documented or worked around (e.g., bundling the rule pack into the bash hook itself for harness-side use).
 
 ### M3. The bash-hook rewire risks bash CI regression
 SPEC Task 7 routes `no-fake-cite.sh` through `agentcloseout-physics` instead of pure bash regex. This means the bash CI smoke test in `llm-dark-patterns/.github/workflows/test.yml` now depends on having the binary available on the CI runner — which it isn't out of the box.

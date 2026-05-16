@@ -7,7 +7,7 @@ Branch: `physics-engines/plan` on `agent-closeout-bench`
 
 ## 1. Goal
 
-Bring every wired hook in `llm-dark-patterns` v1.0.0 up to a **solid physics-engine** standard: documented mechanics, deterministic detection that goes beyond raw lexical regex where regex falls short, structural/semantic where applicable, and end-to-end wiring through both the `agent-closeout-bench` Rust reference engine and the operator's `moneyhermes/minmaxing` harness. Each upgraded hook must demonstrate concrete value to a user — precise BLOCK messages, working repair templates, low false-positive rate.
+Bring every wired hook in `llm-dark-patterns` v1.0.0 up to a **solid physics-engine** standard: documented mechanics, deterministic detection that goes beyond raw lexical regex where regex falls short, structural/semantic where applicable, and end-to-end wiring through both the `agent-closeout-bench` Rust reference engine and the operator's `minmaxing` harness. Each upgraded hook must demonstrate concrete value to a user — precise BLOCK messages, working repair templates, low false-positive rate.
 
 This is paper-readiness work plus product-grade work plus moat-deepening work, in that order of priority.
 
@@ -101,7 +101,7 @@ Decomposing the plan into bounded slices the operator can approve one at a time:
   - Rust unit tests
   - Hookup in `agentcloseout-physics` CLI
   - End-to-end fixture suite (positives, negatives, near-misses)
-  - Replicated wiring in `moneyhermes/minmaxing` so the hook fires there too
+  - Replicated wiring in `minmaxing` so the hook fires there too
   - Demo script for the user-facing value
 - Estimate: agent-native, optimistic 4 hr / likely 7 hr / pessimistic 12 hr.
 - Confidence: medium. Downgrade reason: URL-proximity adjacency logic is novel; first implementation may need a second pass.
@@ -121,8 +121,8 @@ Decomposing the plan into bounded slices the operator can approve one at a time:
 - Estimate: agent-native, optimistic 4 hr / likely 6 hr / pessimistic 10 hr
 
 ### Slice 7: minmaxing harness integration verification
-- Confirm every hook fires correctly in `moneyhermes/minmaxing` (not just `llm-dark-patterns` standalone).
-- The minmaxing harness lives at `/home/fer/Documents/moneyhermes` and uses `.claude/hooks/` for its own wiring. Need to verify it reads from the upgraded `llm-dark-patterns` plugin OR has its own copies.
+- Confirm every hook fires correctly in `minmaxing` (not just `llm-dark-patterns` standalone).
+- The minmaxing harness lives at `/home/fer/Documents/minmaxing` and uses `.claude/hooks/` for its own wiring. Need to verify it reads from the upgraded `llm-dark-patterns` plugin OR has its own copies.
 - Operator-visible demo: a single session where each upgraded hook fires deterministically against a fixture.
 - Estimate: agent-native, optimistic 3 hr / likely 5 hr / pessimistic 8 hr
 
