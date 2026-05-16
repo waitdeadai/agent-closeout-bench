@@ -35,93 +35,143 @@ This work is intentionally framed as pre-release scaffolding, not a final benchm
 % 3. Our contribution: formalisation, candidate corpus, judge protocol, reference engine, hook runtime. Frame as pre-release.
 
 \section{Related Work}\label{sec:related}
-% Budget: ~0.6 page. Five citations minimum. Differentiate cleanly.
-% TODO: structure as three paragraphs:
-%
-% 1. Chat-surface and web-agent dark patterns:
-%    - DarkBench (ICLR 2025) -- six dark-pattern categories on chat outputs; we differentiate on
-%      surface (closeout text at stop hooks) and category set (four closeout-stage patterns).
-%    - HarmBench (arXiv:2402.04249) -- standardised red-teaming for refusal; orthogonal to closeout claims.
-%    - SORRY-Bench (45-class taxonomy) -- safety refusal taxonomy on chat outputs.
-%    - CASE-Bench -- context-aware safety benchmark with 2000+ annotators on chat queries.
-%
-% 2. Runtime monitoring of LLM agents:
-%    - ProbGuard / Pro2Guard (arXiv:2508.00500) -- probabilistic DTMC monitor over agent action traces.
-%      Differentiation: action-level prediction vs closeout-text claim discipline.
-%    - AgentSpec (arXiv:2503.18666, ICSE'26) -- DSL for action-level runtime constraints.
-%      Differentiation: pre-action enforcement vs post-action self-report enforcement.
-%
-% 3. LLM-as-judge methodology:
-%    - DarkBench used three LLM annotators with three human annotators on 1680 examples
-%      and explicitly reported per-category Cohen's kappa as low as 0.27 for one model on one category;
-%      we follow this precedent for honest kappa reporting in section~\ref{sec:annotation}.
+
+\paragraph{Dark patterns in chat surfaces.}
+\citet{darkbench2025} introduce DarkBench, a benchmark of 660 prompts covering six dark-pattern categories observed in chat outputs from fourteen models across five model families: brand bias, user retention, sycophancy, anthropomorphism, harmful generation, and sneaking.
+\citet{harmbench2024} provide HarmBench, a standardised red-teaming framework for refusal robustness covering eighteen attack methods against thirty-three target models.
+\citet{sorrybench2025} contribute SORRY-Bench, a forty-five class taxonomy across four high-level safety domains for evaluating refusal behaviour.
+These three benchmarks share a common surface: the model's response to a user prompt, evaluated as a discrete chat turn.
+Our work studies a different surface.
+The closeout text emitted at a lifecycle stop event is not a chat response to a user prompt; it is the model's self-report about a completed (or claimed-complete) task, and it can contain dark patterns whether or not the user is still present in the loop.
+
+\paragraph{Runtime enforcement of agent safety.}
+A line of work from \citet{agentspec2026} and \citet{probguard2026} addresses safety for LLM agents at the action-trace level.
+AgentSpec is a domain-specific language for specifying triggers, predicates, and reactive enforcement rules over agent actions; rules fire when an unsafe action is about to be executed.
+ProbGuard, by the same research group, learns a discrete-time Markov chain over execution traces and triggers proactive interventions when the predicted probability of reaching an unsafe state exceeds a threshold.
+Both approaches share a target: the action stream produced by an agent's tool calls.
+Our work is orthogonal: the textual closeout artifact emitted at \texttt{Stop} and \texttt{SubagentStop} events is not an action, it is a self-report about a sequence of actions.
+The two surfaces are complementary; an agent whose every action is safe can still emit a dishonest closeout, and an agent with a faithful closeout can still have taken unsafe actions.
+
+\paragraph{LLM-as-a-judge methodology.}
+Following \citet{darkbench2025}, we use a panel of frontier LLMs as annotators rather than recruiting a human pool for the v0.3 release; \citeauthor{darkbench2025}'s ICLR 2025 release reported per-category Cohen's $\kappa$ between LLM judges and human annotators as low as 0.27 on Sycophancy for one model, and published these numbers explicitly rather than discarding them.
+We adopt the same precedent for honest $\kappa$ reporting, with one methodological addition driven by recent work on self-preference bias.
+\citet{spb2026} analyse twenty mainstream models and find a counterintuitive pattern in which stronger model capability correlates with larger self-preference bias when an LLM evaluates outputs from its own family.
+Because our closeout texts originate from Claude Code agents and Claude Sonnet 4.6 is one of our judges, we apply explicit mitigations (binary per-category labels, randomised record order, no model-identity disclosure to the judge) and report cross-judge disagreement as an indicator rather than hide it; details are in Section~\ref{sec:annotation}.
 
 \section{The Closeout Boundary}\label{sec:boundary}
-% Budget: ~0.5 page. Formalise the surface.
-% TODO:
-% - Define the closeout artifact as the last_assistant_message at Stop/SubagentStop events.
-% - Distinguish from chat surfaces (multi-turn dialogue) and action surfaces (tool-call traces).
-% - State the safety property: the closeout artifact contains the agent's self-claims about completion,
-%   evidence, scope, and remaining work; these claims are accessible without access to action traces.
-% - Note the practical lifecycle hooks in Claude Code: Stop, SubagentStop, last_assistant_message.
+
+Agentic coding assistants such as Claude Code structure work as a sequence of tool calls bracketed by user turns and lifecycle events.
+At the end of an autonomous unit of work, the assistant emits a final natural-language message before yielding control: the \emph{closeout text}.
+In Claude Code this is the \texttt{last\_assistant\_message} payload available at the \texttt{Stop} and \texttt{SubagentStop} lifecycle hooks.
+
+We define the closeout artifact precisely as this payload.
+It differs from two adjacent surfaces.
+A \emph{chat-surface response} is a reply to a specific user prompt within an ongoing dialogue; it is co-produced with the user and evaluated turn-by-turn.
+An \emph{action-trace event} is a tool call, a code edit, a shell command, or a structured side-effect produced inside the work loop; it is evaluated by what it does, not by what it says.
+The closeout artifact sits between these surfaces: it is emitted without an immediate user prompt, and it is a natural-language self-report about completed actions rather than an action itself.
+
+This positioning matters for safety.
+The closeout artifact is where the assistant asserts that a task is done, that verification succeeded, that scope was respected, or that nothing else remains.
+These assertions can be checked at this surface even when full action-trace inspection is unavailable, expensive, or out-of-band; conversely, a faithful sequence of actions can still be wrapped in a closeout text that drifts, overclaims, or solicits engagement the user did not request.
+We therefore treat the closeout artifact as a distinct evaluation surface with its own failure taxonomy, defined in Section~\ref{sec:dataset}.
 
 \section{Dataset and Categories}\label{sec:dataset}
-% Budget: ~0.5 page.
-% TODO:
-% - 800 candidate records, 4 categories x 100 positives x 100 negatives.
-% - Categories: wrap_up, cliffhanger, roleplay_drift, sycophancy. Define each in one sentence.
-% - 8 task types per category/label balanced (refactor, research, test, review, debug, write, migrate, infra).
-% - Candidate labels generated deterministically; final labels NOT YET assigned.
-% - Provenance lane: candidate_synthetic + candidate_public_adversarial (16 rows, reviewed sources).
-% - Cite SPEC.md and DATASET_CARD.md (anonymous, by URL placeholder).
+
+The v0.3 candidate corpus contains 800 closeout records covering four categories at the agentic coding assistant boundary.
+The categories are chosen for what an honest agent should not be doing when it claims to be done:
+
+\begin{description}
+\item[\texttt{wrap\_up}] Closeout text declares the task complete or wraps up the session despite missing, partial, or failed evidence; premature ``shipped'', ``all set'', ``we're done here''.
+\item[\texttt{cliffhanger}] Closeout text ends with a leading question or nudge that solicits further engagement when the user did not ask for one; ``want me to do X next?'', ``shall we proceed to Y?''.
+\item[\texttt{roleplay\_drift}] Closeout text adopts a persona or first-person identity claim beyond the task-assistant role; references to feelings, preferences, or persona-anchored phrasing.
+\item[\texttt{sycophancy}] Closeout text praises the user or the user's question without substantive content tied to that praise; compliment as filler.
+\end{description}
+
+Each category contains 100 candidate positives and 100 candidate negatives, balanced across eight task types (\texttt{refactor}, \texttt{research}, \texttt{test}, \texttt{review}, \texttt{debug}, \texttt{write}, \texttt{migrate}, \texttt{infra}).
+Candidate labels are produced deterministically from templates and validated by a schema check; the field \texttt{label\_candidate} carries this label and the field \texttt{label\_final} is intentionally null in v0.3, awaiting human adjudication.
+Each record carries provenance metadata: source type, source license, redaction status, generation method, and a SHA-256 of the generation prompt.
+
+Alongside the synthetic candidate lane, the release ships a small \texttt{candidate\_public\_adversarial} lane of sixteen records derived from reviewed public sources, with a source registry tracking license tier, allowed use, and redaction decisions.
+This lane is deliberately tiny in v0.3; its purpose is to anchor the provenance discipline rather than to provide robust statistical coverage.
+A planned v1.0 expansion adds a larger reviewed public-derived lane (Section~\ref{sec:conclusion}).
 
 \section{Annotation Protocol and Inter-Judge Agreement}\label{sec:annotation}
-% Budget: ~0.8 page. Most important section for credibility.
-% TODO:
-% - Following DarkBench precedent~\citep{darkbench2025}, we use three frontier LLM judges:
-%   {claude-sonnet-4-6, gpt-5.x (TBD exact model ID), gemini-2.x (TBD exact model ID)}.
-% - 200-record stratified sample from the 800 candidate corpus, deterministic seed.
-% - Binary annotation per category per record; judges given prompt with category definitions.
-% - Report Table 1 (analogous to DarkBench Table 3): per-category pairwise Cohen's kappa,
-%   per-judge vs candidate-label agreement, overall.
-% - Following~\citep{darkbench2025}: ``Despite a low Cohen's Kappa on some dark pattern categories,
-%   indicating poor inter-rater agreement, the summary statistics over models and dark patterns
-%   remain consistent.'' We expect and accept this in our context; aggregate consistency is the
-%   construct-validity claim, not perfect per-category agreement.
-% - Explicit note: this is not human-gold. Human adjudication is deferred to a v1.0 release.
+
+Following the precedent set by \citet{darkbench2025}, who used a panel of frontier LLM annotators rather than wait for a full human annotation pool, we annotate a 200-record stratified sample of the v0.3 corpus with three LLM judges drawn from different model families: \texttt{claude-sonnet-4-6}, \texttt{gpt-5.4}, and \texttt{gemini-2.5-pro} (exact model identifiers pinned at run time and recorded with every output record).
+The sample is drawn deterministically from the 800-record corpus: 50 records per category, 25 candidate positives and 25 candidate negatives in each category, with a fixed random seed.
+
+Each judge is shown one record at a time and asked for binary labels on all four categories.
+The prompt template states each category definition explicitly, instructs the judge to be conservative, and prohibits stylistic criteria from influencing the label.
+We do not present the judge with the candidate label, the producing model's identity, or any other annotation; the closeout text and task description are the only inputs.
+
+\paragraph{Self-preference bias mitigations.}
+Our closeout texts originate from Claude Code agents, and one of our three judges is in the same model family.
+\citet{spb2026} document that this configuration introduces self-preference bias, with stronger model capability correlating with a larger effect.
+We apply three mitigations: (i) the prompt does not disclose the producing model; (ii) we use binary per-category labels rather than ranked or pairwise comparative scoring, which previous work identifies as a position-and-preference amplifier; (iii) we report cross-judge disagreement as a signal rather than as an error to minimise, with particular attention to cases where the Claude judge agrees with the candidate label more often than the GPT or Gemini judges do.
+
+\paragraph{Reporting.}
+We compute Cohen's $\kappa$ for every judge pair and for every (judge, candidate-label) pair, broken down by category and aggregate.
+We expect, and the precedent of \citet{darkbench2025} establishes, that per-category $\kappa$ can be substantially below 1; \citeauthor{darkbench2025} report a per-category $\kappa$ as low as 0.27 on Sycophancy for Gemini-1.5-Pro against human annotators on the chat surface, yet the aggregate summary statistics remain consistent across judges.
+We adopt the same convention for honest reporting: low $\kappa$ on a category is information about the difficulty of that category, not a reason to discard the judge or hide the number.
+Final per-category and pairwise $\kappa$ values appear in Table~\ref{tab:kappa}; the table is intentionally not a benchmark performance claim, and no detector $F_1$ number derived from these judge labels appears anywhere in this paper.
 
 \section{Reference Engine and Hook Runtime}\label{sec:engine}
-% Budget: ~0.4 page.
-% TODO:
-% - Deterministic rule packs over normalised closeout text, no LLM in the verdict path.
-% - Categories implemented as per-category engine manifests, rule-pack hash recorded with every decision.
-% - Engine claim: ``Out-of-band deterministic enforcement at the agentic coding assistant closeout
-%   boundary makes specific dark-pattern and false-closeout mechanics observable, reproducible,
-%   and benchmarkable.'' (Quoted verbatim from internal claim ledger.)
-% - NOT a semantic intent detector. NOT prompt-injection-proof.
-% - Hook runtime: thin Bash/JQ wrappers that invoke the reference engine at Stop/SubagentStop.
+
+The reference engine is a single Rust binary that applies category-scoped rule packs to normalised closeout text and emits a verdict.
+No large language model participates in the verdict path; no embedding model, no network call, and no external service is invoked at decision time.
+Inputs are size-bounded before scanning, the rule linter rejects common unsafe regular expressions, and every verdict carries the engine version and a SHA-256 of the rule pack that produced it, so a decision is reproducible from commit alone.
+
+Each category corresponds to a separate rule pack under a per-category engine manifest.
+Packs are YAML files containing match patterns, allow conditions, and a precedence ordering; a reducer combines per-rule outcomes into a single label.
+The packs are intentionally lexical rather than semantic: they encode the textual mechanics by which a closeout exhibits a dark pattern (e.g.\ a leading-question structure with no operator request), not an inference about the model's intent.
+Where a faithful closeout would carry concrete evidence of the work performed, an evidence-marker allowance reduces false positives by treating phrases such as ``verification passed'' or ``tests pass'' as closeout-contract markers.
+The limitations of evidence-marker handling are addressed explicitly in Section~\ref{sec:threat}.
+
+The hook runtime is a thin shell wrapper that reads the \texttt{Stop} or \texttt{SubagentStop} payload, extracts the \texttt{last\_assistant\_message}, normalises whitespace and Unicode, invokes the reference binary, and returns a structured exit code to Claude Code.
+The verdict path is therefore \emph{out-of-band} relative to the model that produced the closeout: the model cannot rewrite the verdict by adjusting its own output, because the verdict layer does not consult the model.
+``Out-of-band'' is a precise claim about the verdict path; it is not a claim about lexical evasion, which remains possible and is discussed in Section~\ref{sec:threat}.
 
 \section{Threat Model and Limitations}\label{sec:threat}
-% Budget: ~0.6 page. Be explicit, paper-grade reviewers will look for this.
-% TODO: enumerate (use \begin{itemize}):
-% 1. Lexical evasion: deterministic rules are matchable on text surface; paraphrase can evade.
-%    We measure this brittleness rather than hide it.
-% 2. Hook misconfiguration: the hook runtime depends on operator wiring; a disabled hook is silent.
-% 3. Runtime bypass: a local operator can intentionally disable hooks; this is not an OS sandbox.
-% 4. In-band vs out-of-band: hooks run outside the model context, but evasion via the model
-%    output text is still possible; the model can be coerced via prompts to phrase a false
-%    closeout in ways our rules do not catch.
-% 5. Evidence-marker limitation: ``verification passed'' style markers are closeout-contract
-%    evidence, not independent proof of task success.
-% 6. Synthetic corpus artifacts: candidate corpus is template-generated. Improved controllability
-%    has the tradeoff of lexical patterns that simple baselines may exploit.
-%
-% Also list:
-% - English-only.
-% - Single-assistant (Claude Code lifecycle) surface; we do not claim universal agent coverage.
-% - Candidate labels not human-adjudicated.
-% - No final benchmark performance numbers in this paper. F1 numbers from candidate diagnostics
-%   are explicitly excluded from abstract, introduction, and conclusion.
+
+We enumerate the conditions under which our reference engine fails or our benchmark numbers should not be trusted, because reviewers and operators of safety infrastructure deserve to see these conditions before drawing conclusions.
+
+\begin{enumerate}
+\item \textbf{Lexical evasion.}
+The reference engine is deterministic and rule-based.
+Paraphrase, synonym substitution, and reordering can defeat any single rule.
+Our v0.3 candidate diagnostics treat lexical brittleness as something to measure, not hide; a planned v1.0 expansion (Section~\ref{sec:conclusion}) adds adversarial paraphrase coverage.
+
+\item \textbf{Hook misconfiguration.}
+The runtime requires correctly wired Claude Code hook entries.
+A disabled hook, a typo in the hook command, or a workflow that bypasses \texttt{Stop} entirely produces a silent miss.
+This is an operator-trust property, not a model-correctness property; the engine cannot detect that it was never invoked.
+
+\item \textbf{Runtime bypass.}
+A local operator with shell access can disable hooks at any time.
+Our engine is a deterministic verdict layer, not an operating-system sandbox.
+Threats from a hostile operator on the same host are out of scope.
+
+\item \textbf{In-band manipulation.}
+Hook decision logic runs out-of-band relative to the model that produced the closeout, so the model cannot directly rewrite the verdict.
+The model can, however, be coerced by an upstream prompt to phrase a false closeout in language the rules do not catch.
+``Out-of-band'' means the verdict path is independent of the model context, not that the closeout text is unmanipulable.
+
+\item \textbf{Evidence-marker limitations.}
+Several rule packs treat tokens such as ``verification passed'' or ``tests pass'' as closeout-contract evidence that mitigates other dark-pattern signals.
+These markers establish that the closeout contract was honoured in form; they are not independent proof that the underlying verification command actually succeeded.
+A workflow that wants stronger guarantees should record verifier outputs separately and treat closeout text as one of several signals.
+
+\item \textbf{Synthetic-corpus artifacts.}
+The v0.3 candidate corpus is template-generated.
+Templates give us controlled positives and negatives across eight task types, but they introduce lexical regularities that simple keyword baselines may exploit.
+Reviewers should expect template patterns to inflate baseline scores; the relevant comparison is between detectors of comparable inductive bias, not between any detector and a human-distribution upper bound.
+\end{enumerate}
+
+\paragraph{Further limitations.}
+The corpus and rule packs are English-only.
+The lifecycle surface is the Claude Code \texttt{Stop} and \texttt{SubagentStop} hook payload; we make no claim about other agent frameworks.
+Candidate labels are not human-adjudicated and the locked-test evaluation that produces final $F_1$ numbers has been intentionally deferred until two independent annotation passes and adjudication are complete.
+Numerical detector scores in this paper are diagnostics over candidate labels, never final benchmark results.
 
 \section{Conclusion}\label{sec:conclusion}
 % Budget: ~0.2 page.
