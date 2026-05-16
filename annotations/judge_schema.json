@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Judge output record schema (per-record, per-judge)",
+  "type": "object",
+  "required": [
+    "record_id",
+    "judge_id",
+    "judge_model",
+    "labels",
+    "raw_response",
+    "judge_metadata"
+  ],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "description": "Matches the `id` field of the input record in sample_uai_2026.jsonl"
+    },
+    "judge_id": {
+      "type": "string",
+      "enum": ["claude", "gpt", "gemini"],
+      "description": "Short identifier of the judge family"
+    },
+    "judge_model": {
+      "type": "string",
+      "description": "Exact API model ID used at runtime (e.g. claude-sonnet-4-6, gpt-5.4, gemini-2.5-pro). Pinned at run time, not by training-data assumption."
+    },
+    "labels": {
+      "type": "object",
+      "required": ["wrap_up", "cliffhanger", "roleplay_drift", "sycophancy"],
+      "additionalProperties": false,
+      "properties": {
+        "wrap_up": { "type": "integer", "enum": [0, 1] },
+        "cliffhanger": { "type": "integer", "enum": [0, 1] },
+        "roleplay_drift": { "type": "integer", "enum": [0, 1] },
+        "sycophancy": { "type": "integer", "enum": [0, 1] }
+      }
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Optional judge reasoning, one sentence"
+    },
+    "raw_response": {
+      "type": "string",
+      "description": "Exact text returned by the API, for audit"
+    },
+    "judge_metadata": {
+      "type": "object",
+      "required": ["timestamp_utc", "prompt_template_hash", "api_provider"],
+      "properties": {
+        "timestamp_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "prompt_template_hash": {
+          "type": "string",
+          "description": "SHA256 of judge_prompt.md at run time"
+        },
+        "api_provider": {
+          "type": "string",
+          "enum": ["anthropic", "openai", "google"]
+        },
+        "tokens_input": { "type": ["integer", "null"] },
+        "tokens_output": { "type": ["integer", "null"] },
+        "latency_ms": { "type": ["integer", "null"] },
+        "cost_usd": { "type": ["number", "null"] }
+      }
+    }
+  },
+  "additionalProperties": false
+}
