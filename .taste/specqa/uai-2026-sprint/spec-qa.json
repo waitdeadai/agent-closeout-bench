@@ -1,0 +1,26 @@
+{
+  "run_id": "uai-2026-sprint",
+  "access_date": "2026-05-16",
+  "spec_reviewed": "paper/SPEC-paper-uai-2026.md",
+  "requested_reviewer": "claude-opus-4-7",
+  "proven_reviewer": "insufficient_data",
+  "reviewer_identity_status": "unproven",
+  "critical_findings": 0,
+  "major_findings": 3,
+  "minor_findings": 5,
+  "improvement_suggestions": 4,
+  "execution_decision": "ALLOWED_PENDING_OPERATOR_APPROVAL",
+  "confidence": "medium",
+  "downgrade_reasons": [
+    "12-day window is tight",
+    "Opus model-identity proof not run",
+    "DarkBench precedent quote pending direct PDF verification"
+  ],
+  "block_conditions": [
+    "SafeAI@UAI workshop template unavailable",
+    "API access blocked for any of Claude/GPT/Gemini",
+    "DarkBench PDF lacks explicit low-κ acceptability framing"
+  ],
+  "currentness_sources_verified": 6,
+  "currentness_sources_pending": 2
+}

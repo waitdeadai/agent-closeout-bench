@@ -1,0 +1,20 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+main.pdf
+
+# Template archive — restorable from https://safe-ai-workshop.github.io/uai-2026/safeai2026-template.zip
+safeai2026-template.zip
+
+# Template internals — kept on disk for compile, not committed
+safeai2026-template/Amsterdam.jpg
+
+# Submission supplementary archive — built on demand
+supplementary.zip

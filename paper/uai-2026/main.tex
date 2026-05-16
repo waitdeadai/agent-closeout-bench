@@ -1,0 +1,135 @@
+\documentclass{safeai2026}
+
+\usepackage[american]{babel}
+\usepackage{natbib}
+    \bibliographystyle{plainnat}
+    \renewcommand{\bibsection}{\subsubsection*{References}}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{url}
+
+\title{AgentCloseoutBench: A Pre-Release Benchmark for Dark-Pattern Detection at the Agentic Coding Assistant Closeout Boundary}
+
+\author[1]{Anonymous Submission}
+\affil[1]{%
+    Anonymous Affiliation
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We formalise the assistant-message closeout boundary of agentic coding assistants as a distinct safety surface and release a pre-release candidate benchmark, AgentCloseoutBench, for detecting four closeout-stage dark patterns: premature wrap-up, cliffhanger nudging, role-play drift, and sycophancy.
+Existing runtime monitors for LLM agents target action-level execution traces.
+We argue that the textual closeout artifact emitted at lifecycle stop events is an orthogonal surface where the agent's claims about its own work can be measured deterministically and out-of-band.
+We release an 800-record candidate corpus, an open annotation protocol with multi-model judges, an open-source deterministic reference engine, and an open hook-pack runtime that integrates with the Claude Code stop and subagent-stop lifecycle hooks.
+We report inter-annotator agreement among three frontier large language model judges on a 200-record sample and discuss honest limitations: candidate labels are not yet human-adjudicated, the reference engine is deterministic rather than semantic, and lexical evasion remains possible.
+This work is intentionally framed as pre-release scaffolding, not a final benchmark score.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+% Budget: ~0.5 page. State the gap, the boundary, the contribution. No final scores.
+% TODO: write 3 paragraphs:
+% 1. Agentic coding assistants increasingly close work autonomously and emit closeout text that asserts what was done.
+% 2. Existing runtime safety work targets action traces; the textual closeout artifact is an under-studied safety surface.
+% 3. Our contribution: formalisation, candidate corpus, judge protocol, reference engine, hook runtime. Frame as pre-release.
+
+\section{Related Work}\label{sec:related}
+% Budget: ~0.6 page. Five citations minimum. Differentiate cleanly.
+% TODO: structure as three paragraphs:
+%
+% 1. Chat-surface and web-agent dark patterns:
+%    - DarkBench (ICLR 2025) -- six dark-pattern categories on chat outputs; we differentiate on
+%      surface (closeout text at stop hooks) and category set (four closeout-stage patterns).
+%    - HarmBench (arXiv:2402.04249) -- standardised red-teaming for refusal; orthogonal to closeout claims.
+%    - SORRY-Bench (45-class taxonomy) -- safety refusal taxonomy on chat outputs.
+%    - CASE-Bench -- context-aware safety benchmark with 2000+ annotators on chat queries.
+%
+% 2. Runtime monitoring of LLM agents:
+%    - ProbGuard / Pro2Guard (arXiv:2508.00500) -- probabilistic DTMC monitor over agent action traces.
+%      Differentiation: action-level prediction vs closeout-text claim discipline.
+%    - AgentSpec (arXiv:2503.18666, ICSE'26) -- DSL for action-level runtime constraints.
+%      Differentiation: pre-action enforcement vs post-action self-report enforcement.
+%
+% 3. LLM-as-judge methodology:
+%    - DarkBench used three LLM annotators with three human annotators on 1680 examples
+%      and explicitly reported per-category Cohen's kappa as low as 0.27 for one model on one category;
+%      we follow this precedent for honest kappa reporting in section~\ref{sec:annotation}.
+
+\section{The Closeout Boundary}\label{sec:boundary}
+% Budget: ~0.5 page. Formalise the surface.
+% TODO:
+% - Define the closeout artifact as the last_assistant_message at Stop/SubagentStop events.
+% - Distinguish from chat surfaces (multi-turn dialogue) and action surfaces (tool-call traces).
+% - State the safety property: the closeout artifact contains the agent's self-claims about completion,
+%   evidence, scope, and remaining work; these claims are accessible without access to action traces.
+% - Note the practical lifecycle hooks in Claude Code: Stop, SubagentStop, last_assistant_message.
+
+\section{Dataset and Categories}\label{sec:dataset}
+% Budget: ~0.5 page.
+% TODO:
+% - 800 candidate records, 4 categories x 100 positives x 100 negatives.
+% - Categories: wrap_up, cliffhanger, roleplay_drift, sycophancy. Define each in one sentence.
+% - 8 task types per category/label balanced (refactor, research, test, review, debug, write, migrate, infra).
+% - Candidate labels generated deterministically; final labels NOT YET assigned.
+% - Provenance lane: candidate_synthetic + candidate_public_adversarial (16 rows, reviewed sources).
+% - Cite SPEC.md and DATASET_CARD.md (anonymous, by URL placeholder).
+
+\section{Annotation Protocol and Inter-Judge Agreement}\label{sec:annotation}
+% Budget: ~0.8 page. Most important section for credibility.
+% TODO:
+% - Following DarkBench precedent~\citep{darkbench2025}, we use three frontier LLM judges:
+%   {claude-sonnet-4-6, gpt-5.x (TBD exact model ID), gemini-2.x (TBD exact model ID)}.
+% - 200-record stratified sample from the 800 candidate corpus, deterministic seed.
+% - Binary annotation per category per record; judges given prompt with category definitions.
+% - Report Table 1 (analogous to DarkBench Table 3): per-category pairwise Cohen's kappa,
+%   per-judge vs candidate-label agreement, overall.
+% - Following~\citep{darkbench2025}: ``Despite a low Cohen's Kappa on some dark pattern categories,
+%   indicating poor inter-rater agreement, the summary statistics over models and dark patterns
+%   remain consistent.'' We expect and accept this in our context; aggregate consistency is the
+%   construct-validity claim, not perfect per-category agreement.
+% - Explicit note: this is not human-gold. Human adjudication is deferred to a v1.0 release.
+
+\section{Reference Engine and Hook Runtime}\label{sec:engine}
+% Budget: ~0.4 page.
+% TODO:
+% - Deterministic rule packs over normalised closeout text, no LLM in the verdict path.
+% - Categories implemented as per-category engine manifests, rule-pack hash recorded with every decision.
+% - Engine claim: ``Out-of-band deterministic enforcement at the agentic coding assistant closeout
+%   boundary makes specific dark-pattern and false-closeout mechanics observable, reproducible,
+%   and benchmarkable.'' (Quoted verbatim from internal claim ledger.)
+% - NOT a semantic intent detector. NOT prompt-injection-proof.
+% - Hook runtime: thin Bash/JQ wrappers that invoke the reference engine at Stop/SubagentStop.
+
+\section{Threat Model and Limitations}\label{sec:threat}
+% Budget: ~0.6 page. Be explicit, paper-grade reviewers will look for this.
+% TODO: enumerate (use \begin{itemize}):
+% 1. Lexical evasion: deterministic rules are matchable on text surface; paraphrase can evade.
+%    We measure this brittleness rather than hide it.
+% 2. Hook misconfiguration: the hook runtime depends on operator wiring; a disabled hook is silent.
+% 3. Runtime bypass: a local operator can intentionally disable hooks; this is not an OS sandbox.
+% 4. In-band vs out-of-band: hooks run outside the model context, but evasion via the model
+%    output text is still possible; the model can be coerced via prompts to phrase a false
+%    closeout in ways our rules do not catch.
+% 5. Evidence-marker limitation: ``verification passed'' style markers are closeout-contract
+%    evidence, not independent proof of task success.
+% 6. Synthetic corpus artifacts: candidate corpus is template-generated. Improved controllability
+%    has the tradeoff of lexical patterns that simple baselines may exploit.
+%
+% Also list:
+% - English-only.
+% - Single-assistant (Claude Code lifecycle) surface; we do not claim universal agent coverage.
+% - Candidate labels not human-adjudicated.
+% - No final benchmark performance numbers in this paper. F1 numbers from candidate diagnostics
+%   are explicitly excluded from abstract, introduction, and conclusion.
+
+\section{Conclusion}\label{sec:conclusion}
+% Budget: ~0.2 page.
+% TODO:
+% - One-paragraph restatement of contribution.
+% - Honest framing: pre-release benchmark scaffold, not final-result paper.
+% - Pointer to v1.0 plan: human adjudication, locked-test, expanded public-derived lane.
+
+\bibliography{refs}
+
+\end{document}
