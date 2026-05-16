@@ -51,20 +51,20 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-disclaimer-spam | NO | NO | NO | **BASH-ONLY** |
 | no-emoji-spam | NO | NO | NO | **BASH-ONLY** |
 | no-fake-cite | YES | YES (rule pack + allow_patterns) | 6 (Slice 1) | **DOCUMENTED** |
-| no-fake-recall | NO | NO | NO | **BASH-ONLY** |
-| no-fake-stats | NO | NO | NO | **BASH-ONLY** |
+| no-fake-recall | YES | YES (rule pack + blockquote/quote allow) | 3 (Slice 2) | **DOCUMENTED** |
+| no-fake-stats | YES | YES (rule pack + source/hedge allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-handoff-loop | NO | NO | NO | **BASH-ONLY** |
 | no-meta-commentary | NO | NO | NO | **BASH-ONLY** |
 | no-ownership-violation | NO | NO | NO | **BASH-ONLY** |
-| no-phantom-tool-call | NO | NO | NO | **BASH-ONLY** |
+| no-phantom-tool-call | YES | YES (rule pack + output-evidence allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-prompt-restate | NO | NO | NO | **BASH-ONLY** |
-| no-rollback-claim-without-evidence | NO | NO | NO | **BASH-ONLY** |
-| no-sandbagging-disguise | NO | NO | NO | **BASH-ONLY** |
+| no-rollback-claim-without-evidence | YES | YES (rule pack + rollback-cmd allow) | 3 (Slice 2) | **DOCUMENTED** |
+| no-sandbagging-disguise | YES | YES (rule pack + blocker-evidence allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-silent-worker-success | NO | NO | NO | **BASH-ONLY** |
 | no-tldr-bait | NO | NO | NO | **BASH-ONLY** |
 | no-approval-sneak | NO | NO | NO | **BASH-ONLY** |
 
-**Summary**: 6 of 26 detector hooks (23%) have physics-engine documentation + Rust implementation. The other 20 (77%) are bash-regex-only with no formal physics model. This is the gap the plan closes.
+**Summary**: After Slice 1 (no-fake-cite) and Slice 2 (fact-fabrication family of 5 hooks), 12 of 26 detector hooks (46%) have physics-engine documentation + Rust implementation. The other 14 (54%) remain bash-regex-only. Slices 3-6 close the gap.
 
 ## 4. What "physics engine" means here
 
