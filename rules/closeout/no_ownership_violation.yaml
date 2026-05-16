@@ -1,0 +1,29 @@
+pack_id: closeout.no_ownership_violation.v1
+category: no_ownership_violation
+version: 0.1.0
+description: STUB rule pack. The canonical no-ownership-violation logic lives in the bash hook (`llm-dark-patterns/hooks/no-ownership-violation.sh`) because it fires on `TaskCompleted` events and compares `.task.owned_paths` against `.edited_files`. The Rust v0.1 engine handles Stop/SubagentStop events with `last_assistant_message` only. This stub exists so `lint-rules` and `test-rules` include the category for parity; the gating feature flag `v0_2_taskcompleted_handler` is intentionally never set in `extract_features`, so the rule never matches positively.
+rules:
+  - rule_id: no_ownership_violation.taskcompleted_path_set_diff
+    category: no_ownership_violation
+    subfamily: ownership_violation
+    severity: high
+    decision: block
+    mechanics:
+      - taskcompleted_handler_required
+      - owned_paths_set_diff_required
+    zone: any
+    patterns: []
+    allow_patterns: []
+    required_features:
+      - v0_2_taskcompleted_handler
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/research/multi-agent
+    examples:
+      - "Stub example (rule cannot match in v0.1 Rust engine): edited_files containing paths outside owned_paths triggers the bash hook canonical path."
+    known_false_positives: []
+    known_false_negatives:
+      - All current detection — Rust v0.1 cannot compute set diff between `.task.owned_paths` and `.edited_files`; canonical detection is in the bash hook only
+    owner: waitdeadai
+    version: 0.1.0

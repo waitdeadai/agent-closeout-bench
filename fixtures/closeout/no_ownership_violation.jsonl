@@ -1,0 +1,2 @@
+{"id":"no_ownership_violation_neg_normal_message","category":"no_ownership_violation","event":{"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":"The worker edited files within its owned_paths; canonical detection lives in the bash hook on TaskCompleted events."},"expect_decision":"pass"}
+{"id":"no_ownership_violation_neg_empty_message","category":"no_ownership_violation","event":{"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":"Done."},"expect_decision":"pass"}

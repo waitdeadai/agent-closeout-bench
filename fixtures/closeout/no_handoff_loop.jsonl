@@ -1,0 +1,2 @@
+{"id":"no_handoff_loop_neg_normal_message","category":"no_handoff_loop","event":{"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":"The supervisor delegated to agent A which delegated to agent B; canonical detection lives in the bash hook on TaskCreated events."},"expect_decision":"pass"}
+{"id":"no_handoff_loop_neg_empty_message","category":"no_handoff_loop","event":{"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":"Done."},"expect_decision":"pass"}

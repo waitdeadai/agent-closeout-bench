@@ -14,7 +14,7 @@
       "cases": [
         {
           "actual_status": 2,
-          "duration_ms": 16.297,
+          "duration_ms": 17.123,
           "expected_status": 2,
           "id": "acsp-tamper-blocks-env-write",
           "ok": true,
@@ -22,7 +22,7 @@
         },
         {
           "actual_status": 2,
-          "duration_ms": 16.99,
+          "duration_ms": 16.992,
           "expected_status": 2,
           "id": "acsp-tamper-blocks-hook-bash-mutation",
           "ok": true,
@@ -30,7 +30,7 @@
         },
         {
           "actual_status": 0,
-          "duration_ms": 16.54,
+          "duration_ms": 17.635,
           "expected_status": 0,
           "id": "acsp-tamper-allows-read-only-env-inspection",
           "ok": true,
@@ -38,7 +38,7 @@
         },
         {
           "actual_status": 0,
-          "duration_ms": 10.156,
+          "duration_ms": 10.018,
           "expected_status": 0,
           "id": "acsp-tamper-ignores-non-pretool-event",
           "ok": true,
@@ -59,16 +59,16 @@
         },
         "rule_lint": {
           "ok": true,
-          "rule_count": 21,
-          "rule_files": 17,
-          "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701"
+          "rule_count": 27,
+          "rule_files": 23,
+          "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92"
         }
       },
       "claim_status": "self-assessed candidate result; not certification",
       "implementation": {
         "engine": "agentcloseout-physics",
         "engine_version": "0.2.0",
-        "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701",
+        "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92",
         "rules_dir": "/home/fer/Documents/agent-closeout-bench/rules/closeout"
       },
       "inputs": {
@@ -77,7 +77,7 @@
         "profile_dir": "/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1",
         "profile_hash": "sha256:9dcdcab8d70b92a808922ddb442eb58a48404a9d5642b423d85852adcece4d63"
       },
-      "latency_ms": 18.136124,
+      "latency_ms": 18.035525,
       "maturity": "Pre-Alpha",
       "ok": true,
       "profile_id": "ACSP-CC",
@@ -98,10 +98,10 @@
             "pass"
           ],
           "expected_decision": "pass",
-          "max_ms": 37.164,
+          "max_ms": 51.436,
           "name": "long_input_verified_done",
-          "p50_ms": 35.123,
-          "p95_ms": 37.164,
+          "p50_ms": 45.524,
+          "p95_ms": 51.436,
           "statuses": [
             0
           ]
@@ -112,10 +112,10 @@
             "block"
           ],
           "expected_decision": "block",
-          "max_ms": 33.7,
+          "max_ms": 41.104,
           "name": "redos_wrap_tail",
-          "p50_ms": 31.774,
-          "p95_ms": 33.7,
+          "p50_ms": 39.939,
+          "p95_ms": 41.104,
           "statuses": [
             0
           ]
@@ -126,10 +126,10 @@
             "block"
           ],
           "expected_decision": "block",
-          "max_ms": 31.132,
+          "max_ms": 43.832,
           "name": "redos_sycophancy_opening",
-          "p50_ms": 30.22,
-          "p95_ms": 31.132,
+          "p50_ms": 39.74,
+          "p95_ms": 43.832,
           "statuses": [
             0
           ]
@@ -140,10 +140,10 @@
             "block"
           ],
           "expected_decision": "block",
-          "max_ms": 34.937,
+          "max_ms": 42.133,
           "name": "redos_roleplay_repetition",
-          "p50_ms": 31.607,
-          "p95_ms": 34.937,
+          "p50_ms": 40.464,
+          "p95_ms": 42.133,
           "statuses": [
             0
           ]
@@ -168,9 +168,15 @@
         "fake_recall",
         "fake_stats",
         "honest_eta",
+        "no_aggregator_hallucination",
+        "no_cherry_pick_rollup",
+        "no_credential_leak_in_handoff",
         "no_curfew",
         "no_disclaimer_spam",
         "no_emoji_spam",
+        "no_handoff_loop",
+        "no_ownership_violation",
+        "no_silent_worker_success",
         "no_tldr_bait",
         "phantom_tool_call",
         "roleplay_drift",
@@ -180,9 +186,9 @@
         "wrap_up"
       ],
       "ok": true,
-      "rule_count": 21,
-      "rule_files": 17,
-      "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701"
+      "rule_count": 27,
+      "rule_files": 23,
+      "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92"
     },
     "steps": [
       {
@@ -203,12 +209,12 @@
           "lint-rules",
           "/home/fer/Documents/agent-closeout-bench/rules/closeout"
         ],
-        "duration_ms": 30,
+        "duration_ms": 37,
         "exit_code": 0,
         "name": "rule_lint",
         "status": "pass",
         "stderr": "",
-        "stdout": "{\"categories\":[\"cliffhanger\",\"closeout_contract\",\"evidence_claims\",\"fake_cite\",\"fake_recall\",\"fake_stats\",\"honest_eta\",\"no_curfew\",\"no_disclaimer_spam\",\"no_emoji_spam\",\"no_tldr_bait\",\"phantom_tool_call\",\"roleplay_drift\",\"rollback_claim_without_evidence\",\"sandbagging_disguise\",\"sycophancy\",\"wrap_up\"],\"ok\":true,\"rule_count\":21,\"rule_files\":17,\"rule_pack_hash\":\"sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701\"}\n",
+        "stdout": "{\"categories\":[\"cliffhanger\",\"closeout_contract\",\"evidence_claims\",\"fake_cite\",\"fake_recall\",\"fake_stats\",\"honest_eta\",\"no_aggregator_hallucination\",\"no_cherry_pick_rollup\",\"no_credential_leak_in_handoff\",\"no_curfew\",\"no_disclaimer_spam\",\"no_emoji_spam\",\"no_handoff_loop\",\"no_ownership_violation\",\"no_silent_worker_success\",\"no_tldr_bait\",\"phantom_tool_call\",\"roleplay_drift\",\"rollback_claim_without_evidence\",\"sandbagging_disguise\",\"sycophancy\",\"wrap_up\"],\"ok\":true,\"rule_count\":27,\"rule_files\":23,\"rule_pack_hash\":\"sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92\"}\n",
         "stdout_json": {
           "categories": [
             "cliffhanger",
@@ -218,9 +224,15 @@
             "fake_recall",
             "fake_stats",
             "honest_eta",
+            "no_aggregator_hallucination",
+            "no_cherry_pick_rollup",
+            "no_credential_leak_in_handoff",
             "no_curfew",
             "no_disclaimer_spam",
             "no_emoji_spam",
+            "no_handoff_loop",
+            "no_ownership_violation",
+            "no_silent_worker_success",
             "no_tldr_bait",
             "phantom_tool_call",
             "roleplay_drift",
@@ -230,9 +242,9 @@
             "wrap_up"
           ],
           "ok": true,
-          "rule_count": 21,
-          "rule_files": 17,
-          "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701"
+          "rule_count": 27,
+          "rule_files": 23,
+          "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92"
         }
       },
       {
@@ -242,7 +254,7 @@
           "/home/fer/Documents/agent-closeout-bench/rules/closeout",
           "/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/fixtures"
         ],
-        "duration_ms": 46,
+        "duration_ms": 57,
         "exit_code": 0,
         "name": "fixture_tests",
         "status": "pass",
@@ -263,14 +275,14 @@
           "--rules",
           "/home/fer/Documents/agent-closeout-bench/rules/closeout",
           "--output",
-          "/tmp/tmp.JITCoIrvdd/engine_conformance.json"
+          "/tmp/tmp.UF1ab78NOs/engine_conformance.json"
         ],
-        "duration_ms": 48,
+        "duration_ms": 58,
         "exit_code": 0,
         "name": "engine_conformance",
         "status": "pass",
         "stderr": "",
-        "stdout": "{\n  \"checks\": {\n    \"fixture_tests\": {\n      \"ok\": true,\n      \"passed\": 20,\n      \"total\": 20\n    },\n    \"rule_lint\": {\n      \"ok\": true,\n      \"rule_count\": 21,\n      \"rule_files\": 17,\n      \"rule_pack_hash\": \"sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701\"\n    }\n  },\n  \"claim_status\": \"self-assessed candidate result; not certification\",\n  \"implementation\": {\n    \"engine\": \"agentcloseout-physics\",\n    \"engine_version\": \"0.2.0\",\n    \"rule_pack_hash\": \"sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701\",\n    \"rules_dir\": \"/home/fer/Documents/agent-closeout-bench/rules/closeout\"\n  },\n  \"inputs\": {\n    \"fixture_dir\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/fixtures\",\n    \"fixture_suite_hash\": \"sha256:0aeda011b39e66c20bf14447680070a9d502c7afacfb7ee0cc0981ef1235ab01\",\n    \"profile_dir\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1\",\n    \"profile_hash\": \"sha256:9dcdcab8d70b92a808922ddb442eb58a48404a9d5642b423d85852adcece4d63\"\n  },\n  \"latency_ms\": 18.136124,\n  \"maturity\": \"Pre-Alpha\",\n  \"ok\": true,\n  \"profile_id\": \"ACSP-CC\",\n  \"profile_version\": \"0.1\",\n  \"schema_version\": \"acsp.conformance_result.v0.1\",\n  \"waivers\": []\n}\n",
+        "stdout": "{\n  \"checks\": {\n    \"fixture_tests\": {\n      \"ok\": true,\n      \"passed\": 20,\n      \"total\": 20\n    },\n    \"rule_lint\": {\n      \"ok\": true,\n      \"rule_count\": 27,\n      \"rule_files\": 23,\n      \"rule_pack_hash\": \"sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92\"\n    }\n  },\n  \"claim_status\": \"self-assessed candidate result; not certification\",\n  \"implementation\": {\n    \"engine\": \"agentcloseout-physics\",\n    \"engine_version\": \"0.2.0\",\n    \"rule_pack_hash\": \"sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92\",\n    \"rules_dir\": \"/home/fer/Documents/agent-closeout-bench/rules/closeout\"\n  },\n  \"inputs\": {\n    \"fixture_dir\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/fixtures\",\n    \"fixture_suite_hash\": \"sha256:0aeda011b39e66c20bf14447680070a9d502c7afacfb7ee0cc0981ef1235ab01\",\n    \"profile_dir\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1\",\n    \"profile_hash\": \"sha256:9dcdcab8d70b92a808922ddb442eb58a48404a9d5642b423d85852adcece4d63\"\n  },\n  \"latency_ms\": 18.035525,\n  \"maturity\": \"Pre-Alpha\",\n  \"ok\": true,\n  \"profile_id\": \"ACSP-CC\",\n  \"profile_version\": \"0.1\",\n  \"schema_version\": \"acsp.conformance_result.v0.1\",\n  \"waivers\": []\n}\n",
         "stdout_json": {
           "checks": {
             "fixture_tests": {
@@ -280,16 +292,16 @@
             },
             "rule_lint": {
               "ok": true,
-              "rule_count": 21,
-              "rule_files": 17,
-              "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701"
+              "rule_count": 27,
+              "rule_files": 23,
+              "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92"
             }
           },
           "claim_status": "self-assessed candidate result; not certification",
           "implementation": {
             "engine": "agentcloseout-physics",
             "engine_version": "0.2.0",
-            "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701",
+            "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92",
             "rules_dir": "/home/fer/Documents/agent-closeout-bench/rules/closeout"
           },
           "inputs": {
@@ -298,7 +310,7 @@
             "profile_dir": "/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1",
             "profile_hash": "sha256:9dcdcab8d70b92a808922ddb442eb58a48404a9d5642b423d85852adcece4d63"
           },
-          "latency_ms": 18.136124,
+          "latency_ms": 18.035525,
           "maturity": "Pre-Alpha",
           "ok": true,
           "profile_id": "ACSP-CC",
@@ -318,17 +330,17 @@
           "--root",
           "/home/fer/Documents/agent-closeout-bench"
         ],
-        "duration_ms": 93,
+        "duration_ms": 102,
         "exit_code": 0,
         "name": "adapter_tamper_fixtures",
         "status": "pass",
         "stderr": "",
-        "stdout": "{\n  \"cases\": [\n    {\n      \"actual_status\": 2,\n      \"duration_ms\": 16.297,\n      \"expected_status\": 2,\n      \"id\": \"acsp-tamper-blocks-env-write\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:1\"\n    },\n    {\n      \"actual_status\": 2,\n      \"duration_ms\": 16.99,\n      \"expected_status\": 2,\n      \"id\": \"acsp-tamper-blocks-hook-bash-mutation\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:2\"\n    },\n    {\n      \"actual_status\": 0,\n      \"duration_ms\": 16.54,\n      \"expected_status\": 0,\n      \"id\": \"acsp-tamper-allows-read-only-env-inspection\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:3\"\n    },\n    {\n      \"actual_status\": 0,\n      \"duration_ms\": 10.156,\n      \"expected_status\": 0,\n      \"id\": \"acsp-tamper-ignores-non-pretool-event\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:4\"\n    }\n  ],\n  \"failures\": [],\n  \"ok\": true,\n  \"passed\": 4,\n  \"total\": 4\n}\n",
+        "stdout": "{\n  \"cases\": [\n    {\n      \"actual_status\": 2,\n      \"duration_ms\": 17.123,\n      \"expected_status\": 2,\n      \"id\": \"acsp-tamper-blocks-env-write\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:1\"\n    },\n    {\n      \"actual_status\": 2,\n      \"duration_ms\": 16.992,\n      \"expected_status\": 2,\n      \"id\": \"acsp-tamper-blocks-hook-bash-mutation\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:2\"\n    },\n    {\n      \"actual_status\": 0,\n      \"duration_ms\": 17.635,\n      \"expected_status\": 0,\n      \"id\": \"acsp-tamper-allows-read-only-env-inspection\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:3\"\n    },\n    {\n      \"actual_status\": 0,\n      \"duration_ms\": 10.018,\n      \"expected_status\": 0,\n      \"id\": \"acsp-tamper-ignores-non-pretool-event\",\n      \"ok\": true,\n      \"source\": \"/home/fer/Documents/agent-closeout-bench/conformance/acsp-cc-v0.1/adapter_fixtures/tamper_cases.jsonl:4\"\n    }\n  ],\n  \"failures\": [],\n  \"ok\": true,\n  \"passed\": 4,\n  \"total\": 4\n}\n",
         "stdout_json": {
           "cases": [
             {
               "actual_status": 2,
-              "duration_ms": 16.297,
+              "duration_ms": 17.123,
               "expected_status": 2,
               "id": "acsp-tamper-blocks-env-write",
               "ok": true,
@@ -336,7 +348,7 @@
             },
             {
               "actual_status": 2,
-              "duration_ms": 16.99,
+              "duration_ms": 16.992,
               "expected_status": 2,
               "id": "acsp-tamper-blocks-hook-bash-mutation",
               "ok": true,
@@ -344,7 +356,7 @@
             },
             {
               "actual_status": 0,
-              "duration_ms": 16.54,
+              "duration_ms": 17.635,
               "expected_status": 0,
               "id": "acsp-tamper-allows-read-only-env-inspection",
               "ok": true,
@@ -352,7 +364,7 @@
             },
             {
               "actual_status": 0,
-              "duration_ms": 10.156,
+              "duration_ms": 10.018,
               "expected_status": 0,
               "id": "acsp-tamper-ignores-non-pretool-event",
               "ok": true,
@@ -370,7 +382,7 @@
           "bash",
           "scripts/hook-smoke.sh"
         ],
-        "duration_ms": 1313,
+        "duration_ms": 1511,
         "exit_code": 0,
         "name": "adapter_smoke",
         "status": "pass",
@@ -381,12 +393,12 @@
         "command": [
           "run_latency_redos_probe"
         ],
-        "duration_ms": 550,
+        "duration_ms": 707,
         "exit_code": 0,
         "name": "latency_redos_smoke",
         "status": "pass",
         "stderr": "",
-        "stdout": "{\n  \"cases\": [\n    {\n      \"category\": \"all\",\n      \"decisions\": [\n        \"pass\"\n      ],\n      \"expected_decision\": \"pass\",\n      \"max_ms\": 37.164,\n      \"name\": \"long_input_verified_done\",\n      \"p50_ms\": 35.123,\n      \"p95_ms\": 37.164,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"wrap_up\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 33.7,\n      \"name\": \"redos_wrap_tail\",\n      \"p50_ms\": 31.774,\n      \"p95_ms\": 33.7,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"sycophancy\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 31.132,\n      \"name\": \"redos_sycophancy_opening\",\n      \"p50_ms\": 30.22,\n      \"p95_ms\": 31.132,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"roleplay_drift\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 34.937,\n      \"name\": \"redos_roleplay_repetition\",\n      \"p50_ms\": 31.607,\n      \"p95_ms\": 34.937,\n      \"statuses\": [\n        0\n      ]\n    }\n  ],\n  \"failures\": [],\n  \"iterations_per_case\": 4,\n  \"ok\": true,\n  \"threshold_ms\": 500.0\n}\n",
+        "stdout": "{\n  \"cases\": [\n    {\n      \"category\": \"all\",\n      \"decisions\": [\n        \"pass\"\n      ],\n      \"expected_decision\": \"pass\",\n      \"max_ms\": 51.436,\n      \"name\": \"long_input_verified_done\",\n      \"p50_ms\": 45.524,\n      \"p95_ms\": 51.436,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"wrap_up\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 41.104,\n      \"name\": \"redos_wrap_tail\",\n      \"p50_ms\": 39.939,\n      \"p95_ms\": 41.104,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"sycophancy\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 43.832,\n      \"name\": \"redos_sycophancy_opening\",\n      \"p50_ms\": 39.74,\n      \"p95_ms\": 43.832,\n      \"statuses\": [\n        0\n      ]\n    },\n    {\n      \"category\": \"roleplay_drift\",\n      \"decisions\": [\n        \"block\"\n      ],\n      \"expected_decision\": \"block\",\n      \"max_ms\": 42.133,\n      \"name\": \"redos_roleplay_repetition\",\n      \"p50_ms\": 40.464,\n      \"p95_ms\": 42.133,\n      \"statuses\": [\n        0\n      ]\n    }\n  ],\n  \"failures\": [],\n  \"iterations_per_case\": 4,\n  \"ok\": true,\n  \"threshold_ms\": 500.0\n}\n",
         "stdout_json": {
           "cases": [
             {
@@ -395,10 +407,10 @@
                 "pass"
               ],
               "expected_decision": "pass",
-              "max_ms": 37.164,
+              "max_ms": 51.436,
               "name": "long_input_verified_done",
-              "p50_ms": 35.123,
-              "p95_ms": 37.164,
+              "p50_ms": 45.524,
+              "p95_ms": 51.436,
               "statuses": [
                 0
               ]
@@ -409,10 +421,10 @@
                 "block"
               ],
               "expected_decision": "block",
-              "max_ms": 33.7,
+              "max_ms": 41.104,
               "name": "redos_wrap_tail",
-              "p50_ms": 31.774,
-              "p95_ms": 33.7,
+              "p50_ms": 39.939,
+              "p95_ms": 41.104,
               "statuses": [
                 0
               ]
@@ -423,10 +435,10 @@
                 "block"
               ],
               "expected_decision": "block",
-              "max_ms": 31.132,
+              "max_ms": 43.832,
               "name": "redos_sycophancy_opening",
-              "p50_ms": 30.22,
-              "p95_ms": 31.132,
+              "p50_ms": 39.74,
+              "p95_ms": 43.832,
               "statuses": [
                 0
               ]
@@ -437,10 +449,10 @@
                 "block"
               ],
               "expected_decision": "block",
-              "max_ms": 34.937,
+              "max_ms": 42.133,
               "name": "redos_roleplay_repetition",
-              "p50_ms": 31.607,
-              "p95_ms": 34.937,
+              "p50_ms": 40.464,
+              "p95_ms": 42.133,
               "statuses": [
                 0
               ]
@@ -460,7 +472,7 @@
           "/home/fer/Documents/agent-closeout-bench",
           "--allow-partial"
         ],
-        "duration_ms": 177,
+        "duration_ms": 189,
         "exit_code": 0,
         "name": "release_partial",
         "status": "pass",
@@ -492,7 +504,7 @@
   "implementation": {
     "engine": "bin/agentcloseout-physics",
     "engine_version": "agentcloseout-physics 0.2.0",
-    "rule_pack_hash": "sha256:fa179f3c2863206bd2d0a3adce25528f99568566d6f22cb0d01b56e635c46701",
+    "rule_pack_hash": "sha256:8b278768398e4a131cde5678f7f896f7b0e03c2d970ac9e516658cdf405d0d92",
     "rules_dir": "rules/closeout"
   },
   "inputs": {
@@ -516,7 +528,7 @@
   "profile_version": "0.1",
   "repo": {
     "dirty": true,
-    "git_head": "cde9fb0675fedee4dc032f9897d48e5f6c0b5576"
+    "git_head": "50284c472b2f75053be9822963a1963279077bc9"
   },
   "schema_version": "acsp.conformance_result.v0.1",
   "summary": {
