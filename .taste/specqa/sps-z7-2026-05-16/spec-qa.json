@@ -1,0 +1,32 @@
+{
+  "run_id": "sps-z7-2026-05-16",
+  "access_date": "2026-05-16",
+  "spec_reviewed": "SPEC-sps-hackathon.md",
+  "outer_route": "/opusolo",
+  "inner_contract": "workflow",
+  "requested_reviewer": "claude-opus-4-7",
+  "proven_reviewer": "insufficient_data",
+  "reviewer_identity_status": "unproven",
+  "critical_findings": 0,
+  "major_findings": 3,
+  "minor_findings": 5,
+  "improvement_suggestions": 4,
+  "execution_decision": "ALLOWED_PENDING_OPERATOR_CONFIRMATION",
+  "confidence": "medium",
+  "downgrade_reasons": [
+    "M1 method-mismatch reviewer risk (formal methods vs regex)",
+    "M2 Luma registration URL not directly verified as SPS-specific",
+    "kickoff template unknown until May 22",
+    "concurrent operator load with NeurIPS pause + other slices"
+  ],
+  "operator_confirmations_needed": [
+    "slice_scope_acceptance",
+    "registration_intent_within_24-48h",
+    "solo_or_team_posture"
+  ],
+  "block_conditions": [
+    "registration_page_closed_or_invitation_only",
+    "operator_declines_3day_window_commitment",
+    "eligibility_issue_on_registration"
+  ]
+}
