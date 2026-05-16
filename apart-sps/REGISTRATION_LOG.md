@@ -7,12 +7,10 @@ Posture (confirmed 2026-05-16): solo
 
 ## Registration record
 
-- **Status**: NOT YET REGISTERED (operator action pending within 24h)
-- **Registration URL candidates**:
-  - Luma: https://luma.com/4q2fnc39
-  - Apart sprint page: https://apartresearch.com/sprints/secure-program-synthesis-hackathon-2026-05-22-to-2026-05-24 (has a Sign Up button)
-- **Operator commit**: register within 24h of 2026-05-16T13:30-03:00 (i.e. by 2026-05-17T13:30-03:00)
-- **Confirmation URL/ID**: TBD (operator pastes after registration)
+- **Status**: SUBMITTED, PENDING APPROVAL (operator registered 2026-05-16T14:00-03:00; Luma marked the entry as pending approval rather than auto-confirmed)
+- **Registration URL used**: (operator to confirm — Luma luma.com/4q2fnc39 most likely)
+- **Confirmation URL/ID**: TBD (operator pastes once approval lands)
+- **Approval timing**: unknown; Apart sprint approvals historically arrive within hours-to-days based on past LessWrong testimonials but operator should watch the registration email
 
 ## Post-registration checklist
 
