@@ -31,11 +31,10 @@ def test_physics_lint_and_fixture_suite():
     fixture_data = json.loads(fixtures.stdout)
     # Fixture count: 19 (v0.3 baseline) + 27 (fake_cite Slice 1) +
     # 39 (Slice 2 fact-fabrication) + 33 (Slice 3 interaction-style) +
-    # 33 (Slice 4 multi-agent: no_aggregator_hallucination 8 +
-    # no_cherry_pick_rollup 7 + no_silent_worker_success 7 +
-    # no_credential_leak_in_handoff 7 + no_handoff_loop 2 +
-    # no_ownership_violation 2) = 151
-    assert fixture_data == {"ok": True, "passed": 151, "total": 151}
+    # 33 (Slice 4 multi-agent) +
+    # 24 (Slice 5 residual: no_ai_tells 8 + no_meta_commentary 7 +
+    # no_prompt_restate 7 + no_approval_sneak 2) = 175
+    assert fixture_data == {"ok": True, "passed": 175, "total": 175}
 
     public_fixtures = run_engine(["test-rules", "rules/closeout", "fixtures/closeout_public"])
     public_fixture_data = json.loads(public_fixtures.stdout)

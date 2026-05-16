@@ -1,0 +1,29 @@
+pack_id: closeout.no_approval_sneak.v1
+category: no_approval_sneak
+version: 0.1.0
+description: STUB rule pack. The canonical no-approval-sneak logic lives in the bash hook (`llm-dark-patterns/hooks/no-approval-sneak.sh`) because it fires on `PreToolUse`/`PostToolUse`/`TaskCompleted` events and inspects `.tool_input.file_path` against a sensitive-path regex plus `.tool_input.approval` token. The Rust v0.1 engine handles Stop/SubagentStop events with `last_assistant_message` only. This stub exists so `lint-rules` and `test-rules` include the category for parity; the gating feature flag `v0_2_pretooluse_handler` is intentionally never set in `extract_features`, so the rule never matches positively.
+rules:
+  - rule_id: no_approval_sneak.pretooluse_sensitive_path_write
+    category: no_approval_sneak
+    subfamily: approval_sneak
+    severity: high
+    decision: block
+    mechanics:
+      - pretooluse_handler_required
+      - sensitive_path_set_match_required
+    zone: any
+    patterns: []
+    allow_patterns: []
+    required_features:
+      - v0_2_pretooluse_handler
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/news/claudes-constitution
+    examples:
+      - "Stub example (rule cannot match in v0.1 Rust engine): a PreToolUse payload writing to .env without an approval token triggers the bash hook canonical path."
+    known_false_positives: []
+    known_false_negatives:
+      - All current detection — Rust v0.1 cannot inspect tool_input.file_path on PreToolUse events; canonical detection is in the bash hook only
+    owner: waitdeadai
+    version: 0.1.0

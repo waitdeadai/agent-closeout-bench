@@ -1,0 +1,39 @@
+pack_id: closeout.no_meta_commentary.v1
+category: no_meta_commentary
+version: 0.1.0
+description: Deterministic mechanics for meta-commentary openers — "Let me think...", "Now I'll consider...", "First, I'll need to think about..." — narrating the thinking process instead of producing the substantive answer. Power-user norm is to lead with the result, not the announcement of forthcoming thinking.
+rules:
+  - rule_id: no_meta_commentary.thinking_announcement_opener
+    category: no_meta_commentary
+    subfamily: meta_opener
+    severity: low
+    decision: block
+    mechanics:
+      - meta_opener_in_opening_zone
+    zone: opening
+    patterns:
+      - '^\s*[*_>"#-]*\s*Let\s+me\s+(?:think|consider|analyze|work\s+through|break\s+(?:this|that)\s+down)'
+      - "^\\s*[*_>\"#-]*\\s*Now\\s+(?:I'll|I\\s+will|let\\s+me)\\s+(?:consider|think|analyze|look|examine)"
+      - "^\\s*[*_>\"#-]*\\s*First\\s*,\\s+(?:I'll|I\\s+(?:need\\s+to|will))\\s+(?:think|consider)"
+      - '^\s*[*_>"#-]*\s*I\s+need\s+to\s+(?:think\s+about|consider|analyze)'
+      - '^\s*[*_>"#-]*\s*Allow\s+me\s+to\s+(?:think|consider|analyze)'
+      - '^\s*[*_>"#-]*\s*I\s+(?:should|will|can|need\s+to)\s+(?:start\s+by|begin\s+by)\s+(?:thinking|considering|analyzing)'
+    allow_patterns: []
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/research/tracing-thoughts-language-model
+    examples:
+      - "Let me think about this for a moment."
+      - "Now I'll consider the options."
+      - "First, I need to think about the data model."
+      - "Allow me to analyze the failure mode."
+    known_false_positives:
+      - A short interjection paragraph beginning with "Let me think" followed by the actual answer — the opening-zone regex fires regardless
+      - Genuine reflection where the model explicitly wants to surface its reasoning
+    known_false_negatives:
+      - Meta-commentary later in the message (engine inspects opening 360 chars only)
+      - Paraphrased meta-openers ("Going to ponder this...", "Let's reason through this together")
+    owner: waitdeadai
+    version: 0.1.0
