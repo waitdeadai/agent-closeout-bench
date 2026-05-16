@@ -2319,7 +2319,8 @@ mod tests {
         assert!(d
             .matched_rules
             .iter()
-            .any(|m| m.rule_id == "no_aggregator_hallucination.synthesis_without_per_worker_evidence"));
+            .any(|m| m.rule_id
+                == "no_aggregator_hallucination.synthesis_without_per_worker_evidence"));
     }
 
     #[test]
@@ -2347,10 +2348,9 @@ mod tests {
             "4 out of 5 workers succeeded. All done.",
         );
         assert_eq!(d.decision, "block");
-        assert!(d
-            .matched_rules
-            .iter()
-            .any(|m| m.rule_id == "no_cherry_pick_rollup.partial_failure_with_unaddressed_remainder"));
+        assert!(d.matched_rules.iter().any(
+            |m| m.rule_id == "no_cherry_pick_rollup.partial_failure_with_unaddressed_remainder"
+        ));
     }
 
     #[test]
