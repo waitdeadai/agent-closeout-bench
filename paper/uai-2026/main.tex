@@ -19,20 +19,28 @@
 \maketitle
 
 \begin{abstract}
-We formalise the assistant-message closeout boundary of agentic coding assistants as a distinct safety surface and release a pre-release candidate benchmark, AgentCloseoutBench, for detecting four closeout-stage dark patterns: premature wrap-up, cliffhanger nudging, role-play drift, and sycophancy.
-Existing runtime monitors for LLM agents target action-level execution traces.
-We argue that the textual closeout artifact emitted at lifecycle stop events is an orthogonal surface where the agent's claims about its own work can be measured deterministically and out-of-band.
-We release an 800-record candidate corpus, an open annotation protocol with multi-model judges, an open-source deterministic reference engine, and an open hook-pack runtime that integrates with the Claude Code stop and subagent-stop lifecycle hooks.
-We report inter-annotator agreement among three frontier large language model judges on a 200-record sample and discuss honest limitations: candidate labels are not yet human-adjudicated, the reference engine is deterministic rather than semantic, and lexical evasion remains possible.
-This work is intentionally framed as pre-release scaffolding, not a final benchmark score.
+Agentic coding assistants increasingly close work autonomously and emit a final natural-language message asserting what was done.
+We argue that this closeout artifact, available at the assistant's lifecycle stop event, is a distinct safety surface from the chat-surface response and from the action trace, and that existing runtime safety work has under-studied it.
+We release AgentCloseoutBench, a pre-release candidate benchmark of 800 closeout records covering four dark patterns at the Claude Code stop and sub-agent-stop boundary: premature wrap-up, cliffhanger nudging, role-play drift, and sycophancy.
+Alongside the corpus we release an open annotation protocol with three frontier large language model judges drawn from different model families, a deterministic out-of-band reference engine, and a hook runtime that integrates with the Claude Code lifecycle.
+We report inter-judge Cohen's $\kappa$ on a 200-record stratified sample and address self-preference bias explicitly, since the closeout texts originate from one of the judge families.
+This release is intentionally framed as pre-release scaffolding: candidate labels are not yet human-adjudicated, lexical rules can be evaded, and we present no detector $F_{1}$ as a final benchmark result.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
-% Budget: ~0.5 page. State the gap, the boundary, the contribution. No final scores.
-% TODO: write 3 paragraphs:
-% 1. Agentic coding assistants increasingly close work autonomously and emit closeout text that asserts what was done.
-% 2. Existing runtime safety work targets action traces; the textual closeout artifact is an under-studied safety surface.
-% 3. Our contribution: formalisation, candidate corpus, judge protocol, reference engine, hook runtime. Frame as pre-release.
+
+Agentic coding assistants such as Claude Code structure work as long-running loops of tool calls and natural-language reasoning, bracketed by lifecycle events at which the assistant yields control.
+At each yield the assistant emits a final natural-language message: a closeout artifact that asserts what was completed, what evidence supports completion, what remains, and whether further engagement is expected.
+The closeout artifact is the surface at which an agent that has performed its work faithfully or unfaithfully nonetheless tells the user, or the next agent in a chain, that the work is done.
+It is therefore a natural candidate surface for safety measurement, and yet it has been studied less than two adjacent surfaces: the chat-surface response, and the action trace of tool calls.
+
+Existing benchmarks for dark patterns in language models, including DarkBench~\citep{darkbench2025}, HarmBench~\citep{harmbench2024}, and SORRY-Bench~\citep{sorrybench2025}, evaluate model behaviour at the chat-surface response surface.
+Runtime safety work for LLM agents, exemplified by AgentSpec~\citep{agentspec2026} and ProbGuard~\citep{probguard2026}, evaluates and constrains action-trace events.
+Neither line of work directly addresses the closeout artifact as a distinct surface with its own failure taxonomy; the closeout is treated, where it appears at all, as a special case of a chat response or as the absence of further actions.
+We argue that the closeout artifact deserves study on its own terms, because the dark patterns that appear here (premature wrap-up, cliffhanger nudging, role-play drift, sycophancy) have different failure mechanics, different operator costs, and different remediation paths than chat-surface or action-trace failures.
+
+This paper contributes (i) a formal definition of the closeout artifact at the Claude Code \texttt{Stop} and \texttt{SubagentStop} lifecycle hooks, (ii) a pre-release candidate corpus of 800 records balanced across four categories and eight task types, (iii) an annotation protocol that uses three frontier large language model judges and follows the precedent set by \citet{darkbench2025} for honest $\kappa$ reporting, with explicit mitigations for self-preference bias~\citep{spb2026}, (iv) an open-source deterministic reference engine that runs out-of-band relative to the producing model, and (v) an open hook-pack runtime that integrates with the Claude Code lifecycle.
+Following the claim discipline set out in our public claim ledger, we report inter-judge agreement and candidate-corpus diagnostics, but no detector $F_{1}$ score in this paper is a final benchmark result; a v1.0 release with human-adjudicated final labels and a frozen locked-test split is planned (Section~\ref{sec:conclusion}).
 
 \section{Related Work}\label{sec:related}
 
@@ -174,11 +182,10 @@ Candidate labels are not human-adjudicated and the locked-test evaluation that p
 Numerical detector scores in this paper are diagnostics over candidate labels, never final benchmark results.
 
 \section{Conclusion}\label{sec:conclusion}
-% Budget: ~0.2 page.
-% TODO:
-% - One-paragraph restatement of contribution.
-% - Honest framing: pre-release benchmark scaffold, not final-result paper.
-% - Pointer to v1.0 plan: human adjudication, locked-test, expanded public-derived lane.
+
+We have proposed the closeout artifact at the agentic coding assistant lifecycle stop event as a distinct safety surface, released a pre-release candidate benchmark with four categories and 800 records, and described an annotation protocol that follows existing precedent on honest $\kappa$ reporting while adding explicit mitigations for self-preference bias.
+The release is deliberately pre-final: no detector $F_{1}$ in this paper is a benchmark result, candidate labels are not human-adjudicated, and the reference engine is deterministic rather than semantic.
+A v1.0 release with two independent human annotation passes, adjudication, agreement metrics, a frozen detector commit, and a locked-test evaluation is planned; the present work is the infrastructure on which that release can be built and reviewed in public.
 
 \bibliography{refs}
 
