@@ -6,6 +6,59 @@ Mode: read-and-recommend (no mutation outside this artifact and a follow-up SPEC
 Time anchor: 2026-05-16T12:19:25-03:00 (Saturday)
 Trigger: operator request "I want the engines to be a moat and focus on other things, identifying the highest leverage path we can take from now"
 
+## Update — 2026-05-16T13:40-03:00 (closeout amendments)
+
+After researching Anthropic's community-marketplace pipeline state, the
+strategic plan shifted in three concrete ways:
+
+- **Z1 marketplace listing**: ACHIEVED via self-hosted marketplace at
+  `github.com/waitdeadai/claude-plugins`, not via the in-app submission form.
+  The community pipeline is broken for many submitters (see
+  `anthropics/claude-plugins-official#1272`, `#984`, `#1292`, `#1597`, `#1887`).
+  Self-hosted bypasses the pipeline. Install verified end-to-end:
+
+  ```
+  claude plugin marketplace add waitdeadai/claude-plugins
+  claude plugin install llm-dark-patterns@waitdeadai-plugins
+  ```
+
+  v1.0.0 confirmed at `~/.claude/plugins/cache/waitdeadai-plugins/llm-dark-patterns/1.0.0/`.
+
+- **UAI workshop deadline (May 28)**: DEFERRED to NeurIPS workshop (Aug 29).
+  The May 28 sprint required operator API-key provisioning + LaTeX path
+  decision; neither happened. NeurIPS workshop gives the same artefacts a
+  full-paper window with human-adjudicated labels achievable in the
+  expanded timeline. `paper/uai-2026-sprint` branch remains the workstream;
+  no work lost.
+
+- **Z2 Anthropic Fellows**: PROMOTED to the next slice. Highest topic-fit
+  funding path; rolling cohort. Inner contract: workflow under `/opusolo`
+  (operator selection 2026-05-16).
+
+- **`no-vibes` standalone rejection**: DEFERRED INDEFINITELY. The bundled
+  `llm-dark-patterns` v1.0.0 includes `no-vibes` and is live; the
+  standalone listing is now redundant for users. Resubmission deferred
+  unless we want a discoverability boost on the single-hook surface.
+
+- **`#1272` community comment draft**: NOT POSTED. Draft preserved at
+  `llm-dark-patterns/.taste/community-comment-draft.md` for historical
+  reference. Issue `#1887` already carries our evidence in the issue
+  tracker. Adding to a closed thread does not improve our distribution
+  position (self-hosted already works) and the political tone around the
+  thread post-closure is mildly fraught.
+
+### Slice ledger after closeout
+
+| Slice | State | Notes |
+|---|---|---|
+| Z1 Anthropic marketplace | DONE (self-hosted variant) | community variant blocked Anthropic-side |
+| Z4 Verified badge | DEFERRED | depends on Z1 community-side resolution |
+| Z2 Fellows | NEXT | rolling cohort, /opusolo route |
+| Z6 UAI/NeurIPS paper | DEFERRED to NeurIPS Aug 29 | workstream preserved on paper/uai-2026-sprint |
+| Z3 AISI Alignment Project | DEFERRED | cycle-bound |
+| Z5 Windsurf port | DEFERRED | lower RICE |
+| Z7 Apart Fellowship | DEFERRED | runs after Z2
+
 ## 1. UAI sprint checkpoint — paused at Day 2 of 12
 
 The SafeAI@UAI 2026 paper sprint is paused at a clean checkpoint, not abandoned. Resume costs are bounded.

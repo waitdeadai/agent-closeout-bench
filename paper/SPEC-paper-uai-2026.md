@@ -1,8 +1,19 @@
-# SPEC: SafeAI@UAI 2026 Workshop Paper Sprint
+# SPEC: NeurIPS 2026 Workshop Paper (re-targeted from SafeAI@UAI 2026)
 
 Access-date anchor for external claims: 2026-05-16.
+
+## Re-target Decision — 2026-05-16T13:40-03:00
+
+This sprint was originally targeted at SafeAI@UAI 2026 (deadline 2026-05-28 AoE). On 2026-05-16 the operator chose to defer the May 28 sprint and re-target to a NeurIPS 2026 workshop (contributions due ~2026-08-29 AoE per `neurips.cc/Conferences/2026/Dates`). The deferred timeline removes the operator API-keys + LaTeX-path blockers and adds room for human-adjudicated labels (per `paper/readiness_audit_2026-05-13.md` Gates 4-5). All draft work on this branch (`paper/uai-2026-sprint`) remains intact; the 4-page workshop draft expands to the new workshop's page allowance.
+
+Target venue: NeurIPS 2026 Workshop (specific workshop TBD; accepted workshop list announced 2026-07-11 per `neurips.cc/Conferences/2026/Dates`).
+Submission deadline: **~2026-08-29 AoE** (verify against the specific workshop's CFP once accepted workshops are listed).
+Format: typically 6-9 pages plus references (varies by workshop), OpenReview.
+
+## Original target (preserved for reference)
+
 Target venue: SafeAI@UAI 2026 (Amsterdam, Aug 21, 2026).
-Submission deadline: **2026-05-28 AoE** (12 days from anchor).
+Submission deadline: 2026-05-28 AoE (DEFERRED 2026-05-16).
 Format: 4-page workshop paper, original-research track, OpenReview.
 
 ## 1. Problem Statement
