@@ -47,8 +47,8 @@ Each criterion is verifiable by command, file, or test.
    - Verify: `echo '{"last_assistant_message":"This is documented in Smith et al., 2023."}' | bin/agentcloseout-physics scan --category fake_cite --json` returns a structured BLOCKED verdict.
 8. **`llm-dark-patterns/hooks/no-fake-cite.sh` invokes the Rust binary via the existing `agentcloseout-physics` adapter path** for verdict (current bash hook does its own regex; the upgrade routes through Rust).
    - Verify: bash smoke test in `llm-dark-patterns` CI continues to PASS on `no-fake-cite` fixtures, but now via the Rust path.
-9. **`moneyhermes/minmaxing` harness fires the upgraded hook end-to-end on a fixture**.
-   - Verify: a smoke test added to `moneyhermes/scripts/hook-smoke.sh` exercises the upgraded hook and exits 0.
+9. **`minmaxing` harness fires the upgraded hook end-to-end on a fixture**.
+   - Verify: a smoke test added to `minmaxing/scripts/hook-smoke.sh` exercises the upgraded hook and exits 0.
 10. **Demo script `engines/fake_cite/DEMO.md`** showing operator-visible value: 3 example closeout texts, what BLOCKED message they get, and what repair template the model sees.
 
 ## 4. Scope
@@ -125,8 +125,8 @@ DoD:
 
 ### Task 8: minmaxing harness wiring
 DoD:
-- [ ] `moneyhermes/.claude/hooks/no-fake-cite.sh` (or equivalent install path) fires the upgraded hook
-- [ ] `moneyhermes/scripts/hook-smoke.sh` includes the smoke case
+- [ ] `minmaxing/.claude/hooks/no-fake-cite.sh` (or equivalent install path) fires the upgraded hook
+- [ ] `minmaxing/scripts/hook-smoke.sh` includes the smoke case
 - [ ] Smoke passes
 
 ### Task 9: CI integration
@@ -144,7 +144,7 @@ DoD:
 - [ ] `PHYSICS_ENGINE_PLAN.md` updated to mark Slice 1 done
 - [ ] PR opened on `agent-closeout-bench` for the slice branch
 - [ ] PR opened on `llm-dark-patterns` for the bash-hook rewire
-- [ ] PR opened on `moneyhermes` for the smoke-test addition
+- [ ] PR opened on `minmaxing` for the smoke-test addition
 
 ## 7. Verification
 
@@ -167,7 +167,7 @@ DoD:
 
 - Pre-PR: `git checkout main && git branch -D physics-engines/slice-1-fake-cite` undoes everything in `agent-closeout-bench`.
 - bash hook rewire on `llm-dark-patterns`: revert via standard git path on the `physics-engines/slice-1-fake-cite` branch; bash smoke test on `main` stays green throughout.
-- minmaxing smoke change: on `moneyhermes` repo, single-file revert.
+- minmaxing smoke change: on `minmaxing` repo, single-file revert.
 - Post-PR (if merged but a flaw is found): `git revert <merge-commit>` on each repo.
 
 ## 9. Risks
@@ -177,7 +177,7 @@ DoD:
 | Template doesn't generalise to other hooks | Slice 1 includes an explicit template-iteration step before Slice 2 launches |
 | URL-adjacency mechanics over-block legitimate citations | Near-miss fixture set forces the false-positive cases into test |
 | 1955-line `main.rs` is hard to modularise cleanly | Acceptable to keep `fake_cite` as a sub-module of `main.rs` if a cleaner module split is too invasive for one slice; document the decision |
-| minmaxing harness wiring path differs from what the hook expects | Check `moneyhermes/.claude/hooks/` layout at Task 8 start; reshape if needed |
+| minmaxing harness wiring path differs from what the hook expects | Check `minmaxing/.claude/hooks/` layout at Task 8 start; reshape if needed |
 | Operator review takes longer than estimated | Slice has 11 tasks with operator-review checkpoints at Tasks 1 and 11; either is a safe pause point |
 
 ## 10. Sources
