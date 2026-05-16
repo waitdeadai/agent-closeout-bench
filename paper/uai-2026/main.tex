@@ -23,7 +23,7 @@ Agentic coding assistants increasingly close work autonomously and emit a final 
 We argue that this closeout artifact, available at the assistant's lifecycle stop event, is a distinct safety surface from the chat-surface response and from the action trace, and that existing runtime safety work has under-studied it.
 We release AgentCloseoutBench, a pre-release candidate benchmark of 800 closeout records covering four dark patterns at the Claude Code stop and sub-agent-stop boundary: premature wrap-up, cliffhanger nudging, role-play drift, and sycophancy.
 Alongside the corpus we release an open annotation protocol with three frontier large language model judges drawn from different model families, a deterministic out-of-band reference engine, and a hook runtime that integrates with the Claude Code lifecycle.
-We report inter-judge Cohen's $\kappa$ on a 200-record stratified sample and address self-preference bias explicitly, since the closeout texts originate from one of the judge families.
+We report inter-judge Cohen's $\kappa$ on a 200-record stratified sample and address self-preference bias explicitly, since the synthetic closeout texts encode lexical patterns observed in Claude Code outputs and one of the judges is in the same model family.
 This release is intentionally framed as pre-release scaffolding: candidate labels are not yet human-adjudicated, lexical rules can be evaded, and we present no detector $F_{1}$ as a final benchmark result.
 \end{abstract}
 
@@ -37,7 +37,7 @@ It is therefore a natural candidate surface for safety measurement, and yet it h
 Existing benchmarks for dark patterns in language models, including DarkBench~\citep{darkbench2025}, HarmBench~\citep{harmbench2024}, and SORRY-Bench~\citep{sorrybench2025}, evaluate model behaviour at the chat-surface response surface.
 Runtime safety work for LLM agents, exemplified by AgentSpec~\citep{agentspec2026} and ProbGuard~\citep{probguard2026}, evaluates and constrains action-trace events.
 Neither line of work directly addresses the closeout artifact as a distinct surface with its own failure taxonomy; the closeout is treated, where it appears at all, as a special case of a chat response or as the absence of further actions.
-We argue that the closeout artifact deserves study on its own terms, because the dark patterns that appear here (premature wrap-up, cliffhanger nudging, role-play drift, sycophancy) have different failure mechanics, different operator costs, and different remediation paths than chat-surface or action-trace failures.
+We argue that the closeout artifact deserves study on its own terms, because the dark patterns that appear here (premature wrap-up, cliffhanger nudging, role-play drift, sycophancy) have different failure mechanics, different operator costs, and likely different remediation paths than chat-surface or action-trace failures.
 
 This paper contributes (i) a formal definition of the closeout artifact at the Claude Code \texttt{Stop} and \texttt{SubagentStop} lifecycle hooks, (ii) a pre-release candidate corpus of 800 records balanced across four categories and eight task types, (iii) an annotation protocol that uses three frontier large language model judges and follows the precedent set by \citet{darkbench2025} for honest $\kappa$ reporting, with explicit mitigations for self-preference bias~\citep{spb2026}, (iv) an open-source deterministic reference engine that runs out-of-band relative to the producing model, and (v) an open hook-pack runtime that integrates with the Claude Code lifecycle.
 Following the claim discipline set out in our public claim ledger, we report inter-judge agreement and candidate-corpus diagnostics, but no detector $F_{1}$ score in this paper is a final benchmark result; a v1.0 release with human-adjudicated final labels and a frozen locked-test split is planned (Section~\ref{sec:conclusion}).
@@ -79,7 +79,7 @@ An \emph{action-trace event} is a tool call, a code edit, a shell command, or a 
 The closeout artifact sits between these surfaces: it is emitted without an immediate user prompt, and it is a natural-language self-report about completed actions rather than an action itself.
 
 This positioning matters for safety.
-The closeout artifact is where the assistant asserts that a task is done, that verification succeeded, that scope was respected, or that nothing else remains.
+The closeout artifact is where the assistant asserts that a task is done, that verification succeeded, that the work covered the requested scope, or that nothing else remains.
 These assertions can be checked at this surface even when full action-trace inspection is unavailable, expensive, or out-of-band; conversely, a faithful sequence of actions can still be wrapped in a closeout text that drifts, overclaims, or solicits engagement the user did not request.
 We therefore treat the closeout artifact as a distinct evaluation surface with its own failure taxonomy, defined in Section~\ref{sec:dataset}.
 
@@ -113,15 +113,33 @@ The prompt template states each category definition explicitly, instructs the ju
 We do not present the judge with the candidate label, the producing model's identity, or any other annotation; the closeout text and task description are the only inputs.
 
 \paragraph{Self-preference bias mitigations.}
-Our closeout texts originate from Claude Code agents, and one of our three judges is in the same model family.
-\citet{spb2026} document that this configuration introduces self-preference bias, with stronger model capability correlating with a larger effect.
-We apply three mitigations: (i) the prompt does not disclose the producing model; (ii) we use binary per-category labels rather than ranked or pairwise comparative scoring, which previous work identifies as a position-and-preference amplifier; (iii) we report cross-judge disagreement as a signal rather than as an error to minimise, with particular attention to cases where the Claude judge agrees with the candidate label more often than the GPT or Gemini judges do.
+The v0.3 candidate corpus is template-generated, not transcribed from real sessions; the templates were however written to mirror lexical patterns observed in actual Claude Code closeouts, and one of our three judges is in the same model family.
+\citet{spb2026} document that when an LLM judge evaluates outputs from its own family, stronger model capability correlates with a larger self-preference effect.
+We treat this as a style-correlation risk rather than a literal training-distribution match, and apply three mitigations regardless: (i) the prompt does not disclose the producing model; (ii) we use binary per-category labels rather than ranked or pairwise comparative scoring, which previous work identifies as a position-and-preference amplifier; (iii) we report cross-judge disagreement as a signal rather than as an error to minimise, with particular attention to cases where the Claude judge agrees with the candidate label more often than the GPT or Gemini judges do.
 
 \paragraph{Reporting.}
 We compute Cohen's $\kappa$ for every judge pair and for every (judge, candidate-label) pair, broken down by category and aggregate.
 We expect, and the precedent of \citet{darkbench2025} establishes, that per-category $\kappa$ can be substantially below 1; \citeauthor{darkbench2025} report a per-category $\kappa$ as low as 0.27 on Sycophancy for Gemini-1.5-Pro against human annotators on the chat surface, yet the aggregate summary statistics remain consistent across judges.
 We adopt the same convention for honest reporting: low $\kappa$ on a category is information about the difficulty of that category, not a reason to discard the judge or hide the number.
 Final per-category and pairwise $\kappa$ values appear in Table~\ref{tab:kappa}; the table is intentionally not a benchmark performance claim, and no detector $F_1$ number derived from these judge labels appears anywhere in this paper.
+
+\begin{table}
+    \centering
+    \caption{Cohen's $\kappa$ across LLM judge pairs and against the deterministic candidate label, per category and aggregate. Computed on the 200-record stratified sample of v0.3. Values populated from \texttt{annotations/judge\_agreement.json} after the v0.3 LLM-judge annotation run is committed; cells marked \emph{TBD} await that run.}\label{tab:kappa}
+    \begin{tabular}{lcccc}
+        \toprule
+        \bfseries Pair & \bfseries wrap\_up & \bfseries cliffhanger & \bfseries roleplay\_drift & \bfseries sycophancy \\
+        \midrule
+        Claude vs.\ GPT      & TBD & TBD & TBD & TBD \\
+        Claude vs.\ Gemini   & TBD & TBD & TBD & TBD \\
+        GPT vs.\ Gemini      & TBD & TBD & TBD & TBD \\
+        \midrule
+        Claude vs.\ candidate  & TBD & TBD & TBD & TBD \\
+        GPT vs.\ candidate     & TBD & TBD & TBD & TBD \\
+        Gemini vs.\ candidate  & TBD & TBD & TBD & TBD \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \section{Reference Engine and Hook Runtime}\label{sec:engine}
 
@@ -132,7 +150,7 @@ Inputs are size-bounded before scanning, the rule linter rejects common unsafe r
 Each category corresponds to a separate rule pack under a per-category engine manifest.
 Packs are YAML files containing match patterns, allow conditions, and a precedence ordering; a reducer combines per-rule outcomes into a single label.
 The packs are intentionally lexical rather than semantic: they encode the textual mechanics by which a closeout exhibits a dark pattern (e.g.\ a leading-question structure with no operator request), not an inference about the model's intent.
-Where a faithful closeout would carry concrete evidence of the work performed, an evidence-marker allowance reduces false positives by treating phrases such as ``verification passed'' or ``tests pass'' as closeout-contract markers.
+When a closeout includes concrete evidence of the work performed, an evidence-marker allowance reduces false positives by treating phrases such as ``verification passed'' or ``tests pass'' as closeout-contract markers.
 The limitations of evidence-marker handling are addressed explicitly in Section~\ref{sec:threat}.
 
 The hook runtime is a thin shell wrapper that reads the \texttt{Stop} or \texttt{SubagentStop} payload, extracts the \texttt{last\_assistant\_message}, normalises whitespace and Unicode, invokes the reference binary, and returns a structured exit code to Claude Code.
