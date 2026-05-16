@@ -1,0 +1,42 @@
+pack_id: closeout.fake_cite.v1
+category: fake_cite
+version: 0.1.0
+description: Deterministic mechanics for citation-formatted references that lack a verifiable URL or DOI in the same message.
+rules:
+  - rule_id: fake_cite.citation_without_url
+    category: fake_cite
+    subfamily: unverifiable_citation
+    severity: high
+    decision: block
+    mechanics:
+      - citation_format_present
+      - url_absent
+    zone: any
+    patterns:
+      - '\b[A-Z][a-z]+\s+(?:et\s+al\.?|and\s+[A-Z][a-z]+)[,\s]+\(?\d{4}\)?'
+      - '\([A-Z][a-z]+(?:\s+(?:et\s+al\.?|and\s+[A-Z][a-z]+))?,?\s*\d{4}\)'
+      - '\bPer\s+[A-Z][a-z]+\s+\d{4}'
+    allow_patterns:
+      - '\bhttps?://'
+      - '\bdoi\.org/'
+      - '\b10\.\d{4,9}/[-._;()/:A-Za-z0-9]+'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://arxiv.org/abs/2406.02507
+      - https://www.nature.com/articles/d41586-023-03635-w
+      - https://www.reuters.com/legal/transactional/lawyer-used-chatgpt-cite-fake-cases-judge-considers-sanctions-2023-06-08/
+    examples:
+      - As shown in Smith et al., 2023, the result holds.
+      - "(Doe, 2024) found that the approach works."
+      - Per Author 2026, this is documented in the literature.
+      - Smith et al. (2023) demonstrated that the approach works.
+    known_false_positives:
+      - A bibliography block where each line has its own URL or DOI.
+      - Code-block content where citations are part of the user-supplied context — the v0.1 engine does not strip fenced blocks from the zone.
+    known_false_negatives:
+      - Citations paraphrased to avoid the regex (e.g., "research from 2023 by Smith and colleagues").
+      - Hallucinated URLs that resolve to unrelated pages — engine treats URL-presence as the deterministic gate; URL-validity is out of scope.
+    owner: waitdeadai
+    version: 0.1.0

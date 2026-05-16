@@ -50,7 +50,7 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-curfew | NO | NO | NO | **BASH-ONLY** |
 | no-disclaimer-spam | NO | NO | NO | **BASH-ONLY** |
 | no-emoji-spam | NO | NO | NO | **BASH-ONLY** |
-| no-fake-cite | NO | NO | NO | **BASH-ONLY** |
+| no-fake-cite | YES | YES (rule pack + allow_patterns) | 6 (Slice 1) | **DOCUMENTED** |
 | no-fake-recall | NO | NO | NO | **BASH-ONLY** |
 | no-fake-stats | NO | NO | NO | **BASH-ONLY** |
 | no-handoff-loop | NO | NO | NO | **BASH-ONLY** |

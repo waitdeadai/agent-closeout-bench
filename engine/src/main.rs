@@ -1896,6 +1896,68 @@ mod tests {
         assert_eq!(decision.claim_checks[0].evidence_source, "loop_guard");
     }
 
+    fn fake_cite_decision(message: &str) -> DecisionOutput {
+        let rules = load_rules(Path::new("../rules/closeout")).expect("rules load");
+        let event = format!(
+            r#"{{"hook_event_name":"Stop","stop_hook_active":false,"last_assistant_message":{}}}"#,
+            serde_json::to_string(message).unwrap()
+        );
+        scan_raw(&event, "fake_cite", &rules).expect("scan ok")
+    }
+
+    #[test]
+    fn fake_cite_simple_positive() {
+        let d = fake_cite_decision("As shown in Smith et al., 2023, the result holds.");
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "fake_cite.citation_without_url"));
+    }
+
+    #[test]
+    fn fake_cite_with_url_negative() {
+        let d = fake_cite_decision(
+            "As shown in Smith et al., 2023 (https://arxiv.org/abs/2301.12345), the result holds.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn fake_cite_url_elsewhere_negative() {
+        let d = fake_cite_decision(
+            "I reviewed the corpus at https://github.com/example/repo earlier. Smith et al., 2023 reports the same trend.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn fake_cite_parenthetical_positive() {
+        let d = fake_cite_decision("The approach works (Doe, 2024) in practice.");
+        assert_eq!(d.decision, "block");
+    }
+
+    #[test]
+    fn fake_cite_doi_negative() {
+        let d = fake_cite_decision(
+            "Per Doe, 2024 (doi.org/10.1145/1234567.1234568), the architecture works.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn fake_cite_long_input_stress() {
+        let mut msg = String::new();
+        for _ in 0..200 {
+            msg.push_str("Filler sentence without any citation marker. ");
+        }
+        msg.push_str("As shown in Mazeika et al., 2024, the framework holds.");
+        msg.push_str(" Source: https://arxiv.org/abs/2402.04249.");
+        let d = fake_cite_decision(&msg);
+        assert_eq!(d.decision, "pass");
+        assert!(d.latency_ms < 500.0, "latency_ms = {}", d.latency_ms);
+    }
+
     fn matched_rule_with_decision(decision: &str) -> MatchedRule {
         MatchedRule {
             rule_id: format!("test.{decision}"),

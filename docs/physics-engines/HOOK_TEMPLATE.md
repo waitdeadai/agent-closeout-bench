@@ -102,42 +102,23 @@ The demo lives separately to avoid bloating the ENGINE.md. The demo's three exam
 
 ---
 
-## Rust module shape
+## Rust engine integration
 
-Under `engine/src/categories/<slug>.rs` (creating `engine/src/categories/mod.rs` if it doesn't exist; otherwise inlining as a `mod <slug> { ... }` block in the existing `main.rs` is acceptable for v0.3, with a TODO to refactor into a separate file at v0.4).
+The existing engine architecture (v0.3) places category logic in **rule pack YAML + shared feature extraction**, not per-category Rust modules. A new physics engine in this architecture means:
 
-Module shape:
+1. **Feature flags in `extract_features`** (`engine/src/main.rs`). Add boolean signals the rule pack needs. Examples for `no-fake-cite`:
+   - `has_citation_pattern` — citation-format regex matches anywhere
+   - `has_verifiable_url` — URL present anywhere in message
+   - `citation_near_url` — citation token within K tokens of URL (URL-proximity adjacency)
+   - `citation_without_url` — citation present, no URL nearby
 
-```rust
-pub fn detect_<slug>(input: &CloseoutText) -> Verdict {
-    // ...
-}
+2. **Rule pack YAML at `rules/closeout/<slug>.yaml`** consuming those features via `required_features` / `forbidden_features` plus raw `patterns`.
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+3. **Unit tests in the existing `#[cfg(test)] mod tests` block** in `main.rs`. Test names follow the pattern `fake_cite_simple_positive`, `fake_cite_with_url_negative`, `fake_cite_long_input`, etc.
 
-    #[test]
-    fn simple_positive() { /* ... */ }
+Per-category Rust modules are NOT the architecture. If a hook's logic ever outgrows feature flags + YAML, split a category module out then. For Slice 1 through Slice 5, feature-flag additions are the canonical Rust-side change.
 
-    #[test]
-    fn simple_negative() { /* ... */ }
-
-    #[test]
-    fn surface_variation_positive() { /* ... */ }
-
-    #[test]
-    fn legitimate_use_negative() { /* ... */ }
-
-    #[test]
-    fn near_miss_boundary() { /* ... */ }
-
-    #[test]
-    fn long_input_stress() { /* ... */ }
-}
-```
-
-The `CloseoutText` and `Verdict` types are shared across all physics modules; defined in the engine's core types module (currently inline in `main.rs`).
+The shared types touched: `Features` (`closeout_state: String, flags: BTreeMap<String, bool>`), `NormalizedEvent`, `DecisionOutput`. All exist in `engine/src/main.rs`; the new code adds to `extract_features` and possibly to the `closeout_state` classification ladder.
 
 ---
 
