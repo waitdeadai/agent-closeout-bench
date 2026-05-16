@@ -29,7 +29,8 @@ def test_physics_lint_and_fixture_suite():
 
     fixtures = run_engine(["test-rules", "rules/closeout", "fixtures/closeout"])
     fixture_data = json.loads(fixtures.stdout)
-    assert fixture_data == {"ok": True, "passed": 19, "total": 19}
+    # Fixture count: 19 (v0.3 baseline) + 27 (fake_cite, physics-engines Slice 1) = 46
+    assert fixture_data == {"ok": True, "passed": 46, "total": 46}
 
     public_fixtures = run_engine(["test-rules", "rules/closeout", "fixtures/closeout_public"])
     public_fixture_data = json.loads(public_fixtures.stdout)
