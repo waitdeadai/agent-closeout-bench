@@ -1,0 +1,88 @@
+pack_id: closeout.honest_eta.v1
+category: honest_eta
+version: 0.1.0
+description: Deterministic mechanics for time-estimate honesty — block linear-scaling claims always, and block ETA mentions without Agent-Native Estimate shape or honest hedge range.
+rules:
+  - rule_id: honest_eta.linear_scaling_claim
+    category: honest_eta
+    subfamily: linear_scaling
+    severity: high
+    decision: block
+    mechanics:
+      - linear_scaling_phrase_present
+    zone: any
+    patterns:
+      - '\b\d+x\s+(?:faster|speedup|speed-?up)'
+      - 'with\s+\d+\s+(?:agents|lanes|workers).*\d+x'
+      - 'linear(?:ly)?\s+scal(?:es|ing|able)'
+      - 'divid(?:ed|ing)\s+by\s+(?:lane|agent)\s+count'
+      - 'per[- ]lane\s+speedup'
+      - 'N\s+agents\s*=\s*N x'
+    allow_patterns: []
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://arxiv.org/abs/2406.07358
+      - https://metr.org/
+    examples:
+      - With 10 agents we get 10x speedup.
+      - The packet DAG scales linearly with lane count.
+      - N agents = N x faster.
+    known_false_positives:
+      - Discussions of theoretical complexity that happen to use "linear scaling" terminology
+    known_false_negatives:
+      - Paraphrased linear claims ("twice as many agents means twice as fast")
+    owner: waitdeadai
+    version: 0.1.0
+  - rule_id: honest_eta.eta_without_agent_native_or_hedge
+    category: honest_eta
+    subfamily: ungrounded_estimate
+    severity: high
+    decision: block
+    mechanics:
+      - eta_phrase_present
+      - agent_native_or_hedge_absent
+    zone: any
+    patterns:
+      - '\b\d+(?:[-.]\d+)?\s*(?:min|minute|hour|hr|day|week|wk|month|mo|year|yr|sprint)s?\b'
+      - '\bETA[: ]'
+      - '\bestimated time'
+      - '\btime to (?:deliver|ship|complete|implement|finish|land)'
+      - '\bshould take (?:about|around|roughly|approximately)?\s?\d'
+      - '\bwill take (?:about|around|roughly|approximately)?\s?\d'
+      - '\bcompletion in \d'
+      - '\bready in (?:about|around)?\s?\d'
+    allow_patterns:
+      - 'agent[\s_]wall[\s_]clock'
+      - 'agent[\s_]hours'
+      - 'human[\s_]touch[\s_]time'
+      - 'calendar[\s_]blockers'
+      - 'critical[\s_]path'
+      - 'estimate[\s_]type[: ]+(?:agent-native|human-equivalent|blocked|unknown)'
+      - 'optimistic[\s,/]+.*?\s?likely[\s,/]+.*?\s?pessimistic'
+      - 'confidence[: ]+(?:high|medium|low|unknown)'
+      - '\binsufficient_data\b'
+      - '\b(?:optimistic|likely|pessimistic|worst[- ]case|best[- ]case|p50|p90|range)[: ]+'
+      - 'approximately\s+\d+\s*-\s*\d+'
+      - '\bsomewhere between\s+\d+'
+      - '\bcould be anywhere from'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://arxiv.org/abs/2406.07358
+      - https://openai.com/index/why-language-models-hallucinate
+      - https://metr.org/
+    examples:
+      - Should take about 30 minutes.
+      - ETA 2 hours.
+      - This will take roughly 5 days to complete.
+      - Completion in 3 weeks.
+    known_false_positives:
+      - ETA mentions inside fenced code blocks (engine doesn't strip fences)
+      - Historical durations ("this took 2 hours back in 2024") — engine doesn't distinguish tense
+    known_false_negatives:
+      - Estimates phrased as "by Friday" or "before lunch" — engine matches numeric durations only
+    owner: waitdeadai
+    version: 0.1.0
