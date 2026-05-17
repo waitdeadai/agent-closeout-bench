@@ -1,0 +1,47 @@
+pack_id: closeout.no_aggregator_hallucination.v1
+category: no_aggregator_hallucination
+version: 0.1.0
+description: Deterministic mechanics for supervisor messages that synthesize "the workers' results" without citing per-worker output. LLM-based synthesis hallucinates consensus that doesn't exist in the underlying results.
+rules:
+  - rule_id: no_aggregator_hallucination.synthesis_without_per_worker_evidence
+    category: no_aggregator_hallucination
+    subfamily: fabricated_consensus
+    severity: high
+    decision: block
+    mechanics:
+      - aggregator_claim_present
+      - per_worker_evidence_absent
+    zone: any
+    patterns:
+      - "synthesizing\\s+(?:the\\s+)?(?:workers|agents|subagents|parallel\\s+(?:workers|agents))['’]?\\s+(?:results|findings|output|reports)"
+      - "based\\s+on\\s+(?:the\\s+)?(?:workers|agents|subagents)['’]?\\s+(?:results|findings|output|reports|work)"
+      - 'combining\s+(?:the\s+)?(?:results|outputs|findings)\s+from\s+(?:\d+|all|the)\s+(?:workers|agents|subagents)'
+      - 'aggregating\s+(?:the\s+)?(?:results|findings)\s+from\s+(?:\d+|all|the)?\s?(?:workers|agents|subagents)'
+      - 'consensus\s+(?:across|among|from)\s+(?:the\s+)?(?:\d+|all|the|multiple)\s+(?:workers|agents|subagents)'
+      - 'the\s+(?:workers|agents|subagents)\s+(?:all\s+)?(?:report|reported|conclude|concluded|agreed|agree)'
+    allow_patterns:
+      - 'worker[\s_-]*\d+\s*[:=]'
+      - 'agent[\s_-]*\d+\s*[:=]'
+      - 'subagent[\s_-]*\d+\s*[:=]'
+      - 'worker[\s_-]*(?:id|name)\s*[:=]'
+      - '`?worker_[a-zA-Z0-9_-]+`?\s*[:=]'
+      - '^>\s+\S'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/research/multi-agent
+      - https://arxiv.org/abs/2603.04474
+    examples:
+      - Synthesizing the workers' results, all 5 lanes shipped clean.
+      - Based on the agents' findings, the refactor is consistent across modules.
+      - Combining the results from 4 subagents, the migration is verified.
+      - The workers all reported success.
+    known_false_positives:
+      - Genuine synthesis where per-worker evidence is present in a fenced code block (engine doesn't strip fences, but allow_patterns catch `worker_N:` shapes)
+      - Documentation that quotes the phrasing without claiming it
+    known_false_negatives:
+      - Paraphrased synthesis ("the team agrees that...", "everyone says...")
+      - Cross-message aggregation where per-worker output was in a prior turn
+    owner: waitdeadai
+    version: 0.1.0

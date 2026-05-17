@@ -2309,6 +2309,145 @@ mod tests {
         assert_eq!(d.decision, "pass");
     }
 
+    #[test]
+    fn no_aggregator_hallucination_simple_positive() {
+        let d = slice2_decision(
+            "no_aggregator_hallucination",
+            "Synthesizing the workers' results, all 5 lanes shipped clean.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id
+                == "no_aggregator_hallucination.synthesis_without_per_worker_evidence"));
+    }
+
+    #[test]
+    fn no_aggregator_hallucination_with_worker_evidence_negative() {
+        let d = slice2_decision(
+            "no_aggregator_hallucination",
+            "Synthesizing the workers' results: worker_1: pass, worker_2: pass, worker_3: pass.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_aggregator_hallucination_no_synthesis_negative() {
+        let d = slice2_decision(
+            "no_aggregator_hallucination",
+            "The patch is complete. All tests pass.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_cherry_pick_rollup_simple_positive() {
+        let d = slice2_decision(
+            "no_cherry_pick_rollup",
+            "4 out of 5 workers succeeded. All done.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d.matched_rules.iter().any(
+            |m| m.rule_id == "no_cherry_pick_rollup.partial_failure_with_unaddressed_remainder"
+        ));
+    }
+
+    #[test]
+    fn no_cherry_pick_rollup_with_retry_negative() {
+        let d = slice2_decision(
+            "no_cherry_pick_rollup",
+            "4 out of 5 workers succeeded. Will retry the failed worker. Done.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_cherry_pick_rollup_no_positive_close_negative() {
+        let d = slice2_decision(
+            "no_cherry_pick_rollup",
+            "4 out of 5 workers succeeded. The 5th is still running.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_silent_worker_success_simple_positive() {
+        let d = slice2_decision("no_silent_worker_success", "All 5 workers completed. Done.");
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "no_silent_worker_success.rollup_without_per_worker_status"));
+    }
+
+    #[test]
+    fn no_silent_worker_success_per_worker_evidence_negative() {
+        let d = slice2_decision(
+            "no_silent_worker_success",
+            "All 3 workers completed. worker_1: exit=0, result=clean. worker_2: exit=0, result=clean. worker_3: exit=0, result=clean.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_silent_worker_success_no_rollup_negative() {
+        let d = slice2_decision(
+            "no_silent_worker_success",
+            "The patch is complete. Tests pass.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_credential_leak_simple_positive() {
+        let d = slice2_decision(
+            "no_credential_leak_in_handoff",
+            "Use sk-ant-XXXXXXXXXXXXXXXXXXXXXXXXXXX for the request.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "no_credential_leak_in_handoff.credential_shape_in_closeout"));
+    }
+
+    #[test]
+    fn no_credential_leak_bearer_positive() {
+        let d = slice2_decision(
+            "no_credential_leak_in_handoff",
+            "Set Bearer XXXXXXXXXXXXXXXXXXXXXXXX for the auth header.",
+        );
+        assert_eq!(d.decision, "block");
+    }
+
+    #[test]
+    fn no_credential_leak_env_var_ref_negative() {
+        let d = slice2_decision(
+            "no_credential_leak_in_handoff",
+            "Use $ANTHROPIC_API_KEY from the environment; never inline it.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_handoff_loop_stub_never_matches() {
+        let d = slice2_decision(
+            "no_handoff_loop",
+            "Any message content — the v0.1 engine never positively matches this category because the gating feature flag v0_2_taskcreated_handler is never set.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_ownership_violation_stub_never_matches() {
+        let d = slice2_decision(
+            "no_ownership_violation",
+            "Any message content — the v0.1 engine never positively matches this category because the gating feature flag v0_2_taskcompleted_handler is never set.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
     fn matched_rule_with_decision(decision: &str) -> MatchedRule {
         MatchedRule {
             rule_id: format!("test.{decision}"),

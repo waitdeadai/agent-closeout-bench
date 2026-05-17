@@ -1,0 +1,29 @@
+pack_id: closeout.no_handoff_loop.v1
+category: no_handoff_loop
+version: 0.1.0
+description: STUB rule pack. The canonical no-handoff-loop logic lives in the bash hook (`llm-dark-patterns/hooks/no-handoff-loop.sh`) because it fires on `TaskCreated` events and counts agent_id occurrences in `.delegation_history`. The Rust v0.1 engine handles Stop/SubagentStop events with `last_assistant_message` only. This stub exists so `lint-rules` and `test-rules` include the category for parity; the gating feature flag `v0_2_taskcreated_handler` is intentionally never set in `extract_features`, so the rule never matches positively.
+rules:
+  - rule_id: no_handoff_loop.taskcreated_delegation_loop
+    category: no_handoff_loop
+    subfamily: handoff_loop
+    severity: high
+    decision: block
+    mechanics:
+      - taskcreated_handler_required
+      - delegation_history_counting_required
+    zone: any
+    patterns: []
+    allow_patterns: []
+    required_features:
+      - v0_2_taskcreated_handler
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/research/multi-agent
+    examples:
+      - "Stub example (rule cannot match in v0.1 Rust engine): a delegation_history with the same agent_id appearing 3+ times triggers the bash hook canonical path."
+    known_false_positives: []
+    known_false_negatives:
+      - All current detection — Rust v0.1 cannot count `.delegation_history` entries; canonical detection is in the bash hook only
+    owner: waitdeadai
+    version: 0.1.0
