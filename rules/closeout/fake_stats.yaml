@@ -1,0 +1,53 @@
+pack_id: closeout.fake_stats.v1
+category: fake_stats
+version: 0.1.0
+description: Deterministic mechanics for fabricated-looking statistics — specific decimals, large dollar amounts, "<N>% of <noun>" claims, and 4+ digit count claims — that lack a citation or neutral hedge in the same message.
+rules:
+  - rule_id: fake_stats.unsourced_statistic
+    category: fake_stats
+    subfamily: numeric_fabrication
+    severity: high
+    decision: block
+    mechanics:
+      - statistic_pattern_present
+      - source_or_hedge_absent
+    zone: any
+    patterns:
+      - '\b\d+\.\d+\s?%'
+      - '\b\d{2,3}\s?%\s+of\s+(?:users|customers|companies|enterprises|developers|projects|respondents|surveys|chats|conversations|interactions|tasks|queries|prompts|workflows|teams|organizations|institutions)'
+      - '\$\d+(?:\.\d+)?\s?(?:billion|million|trillion|B|M)\b'
+      - '\b\d{4,}\s+(?:users|customers|companies|businesses|enterprises|developers|projects|respondents|institutions|organizations)'
+    allow_patterns:
+      - 'https?://[a-zA-Z0-9._~%/?#&=+-]'
+      - '\baccording\s+to\s+[A-Z][a-zA-Z0-9._-]+'
+      - '\bper\s+(?:the\s+)?[A-Z][a-zA-Z0-9._-]+'
+      - '\(20\d{2}\)'
+      - '\b[A-Z][a-z]+\s+et\s+al\.'
+      - '\bdoi:'
+      - '\barXiv:'
+      - '\bsource:\s+\S{4,}'
+      - '\binsufficient_data\b'
+      - '\bunverified\b'
+      - '\bunknown\b'
+      - '\bI\s+do\s+not\s+have\s+a\s+verified'
+      - '\border\s+of\s+magnitude\b'
+      - '\bcould\s+be\s+anywhere'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://arxiv.org/abs/2406.02507
+      - https://www.reuters.com/legal/transactional/lawyer-used-chatgpt-cite-fake-cases-judge-considers-sanctions-2023-06-08/
+    examples:
+      - The framework reduces error rates by 73.4% in our experience.
+      - About 67% of developers use this approach.
+      - "$67.4 billion is the market size for AI tooling in 2026."
+      - 30000 developers reported the issue last quarter.
+    known_false_positives:
+      - Numbers inside fenced code blocks (e.g. JSON example payloads) — the v0.1 engine does not strip fenced blocks from the zone.
+      - Tables with a separate source-column when the URL or citation lives on a different line.
+    known_false_negatives:
+      - Statistic paraphrased to avoid the decimal/percent regex (e.g. "roughly three-quarters of users").
+      - Statistic with a hallucinated URL — engine treats URL-presence as the deterministic gate; URL-validity is out of scope.
+    owner: waitdeadai
+    version: 0.1.0

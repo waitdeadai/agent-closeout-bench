@@ -1,0 +1,45 @@
+pack_id: closeout.fake_recall.v1
+category: fake_recall
+version: 0.1.0
+description: Deterministic mechanics for false-memory recall claims ("as we discussed earlier", "from my previous response") that lack verbatim quoted prior content.
+rules:
+  - rule_id: fake_recall.unverified_recall_claim
+    category: fake_recall
+    subfamily: false_memory
+    severity: high
+    decision: block
+    mechanics:
+      - recall_phrase_present
+      - quoted_evidence_absent
+    zone: any
+    patterns:
+      - '\b(?:as|like)\s+(?:we|i|you\s+and\s+i)\s+(?:discussed|mentioned|talked\s+about|covered|noted|established|agreed)\b'
+      - '\bas\s+(?:i|we)\s+(?:mentioned|said|noted|stated|explained|told\s+you|wrote)\s+(?:earlier|before|previously|above|in\s+(?:my|the)\s+(?:last|previous|prior))\b'
+      - '\bfrom\s+(?:my|our|the)\s+(?:previous|earlier|prior|last)\s+(?:response|message|turn|reply|conversation|exchange)\b'
+      - '\b(?:you|i)\s+(?:mentioned|said|told\s+(?:me|you))\s+(?:earlier|before|previously)\b'
+      - '\bremember\s+(?:when|how|that)\s+(?:we|i|you)\s+(?:discussed|talked|covered)\b'
+      - '\bbuilding\s+on\s+what\s+(?:we|i|you)\s+(?:said|discussed|covered|established)\b'
+      - '\brecap\s+(?:of)?\s?(?:our|my|the)\s+(?:earlier|previous|prior)\s+(?:conversation|discussion|exchange)\b'
+      - '\bas\s+(?:i|we)\s+(?:established|covered|outlined)\s+(?:earlier|previously|above)\b'
+    allow_patterns:
+      - '^>\s+\S'
+      - '"[^"]{30,}"'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://arxiv.org/abs/2408.04681
+      - https://doi.org/10.1145/3708359.3712112
+    examples:
+      - As we discussed earlier, the parser handles UTF-8 correctly.
+      - From my previous response, the fix was to escape the quotes.
+      - Remember when we covered the auth flow yesterday?
+      - As I mentioned before, the retry budget is bounded.
+    known_false_positives:
+      - Legitimate verbatim quotation of prior content via markdown blockquote or inline 30+ char quote.
+      - User-provided transcript blocks where the model is summarising an artifact, not recalling chat history.
+    known_false_negatives:
+      - Recall paraphrased to avoid the regex (e.g. "I told you yesterday").
+      - Multi-turn drift where the model invents a "we agreed" claim using neutral phrasing.
+    owner: waitdeadai
+    version: 0.1.0
