@@ -64,7 +64,7 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-tldr-bait | YES | YES (zone:tail + length_over_200 flag) | 3 (Slice 3) | **DOCUMENTED** |
 | no-approval-sneak | YES (stub) | YES (stub, gated by v0_2_pretooluse_handler) | 1 stub | **DOCUMENTED-LIMITED** |
 
-**Summary**: After Slices 1–5 (no-fake-cite + fact-fabrication + interaction-style + multi-agent + residual), all 26 detector hooks have at least partial physics-engine coverage — 22 DOCUMENTED + 3 DOCUMENTED-LIMITED + 1 baseline-pending. Zero remain bash-only (`no-credential-leak-in-handoff` already covers credential shapes in `last_assistant_message`; the TaskCreated path stays bash). A future "event-handler slice" would lift the 3 LIMITED hooks (no-handoff-loop, no-ownership-violation, no-approval-sneak) to full DOCUMENTED when the Rust engine gains TaskCreated/PostToolUse handlers + structural field inspection.
+**Summary**: After Slices 1–5 (no-fake-cite + fact-fabrication + interaction-style + multi-agent + residual) plus Slice 6 (baseline ENGINE.md refresh to HOOK_TEMPLATE.md template), all 26 detector hooks have at least partial physics-engine coverage — 22 DOCUMENTED + 3 DOCUMENTED-LIMITED + 1 closeout_contract (shared protocol). All 26 ENGINE.md files now follow the 9-section template. The 3 LIMITED hooks (no-handoff-loop, no-ownership-violation, no-approval-sneak) require Rust event-handler support for TaskCreated/TaskCompleted/PreToolUse — future event-handler slice. The 5 baseline bash hooks (no-vibes, no-cliffhanger, no-wrap-up, no-sycophancy, no-roleplay-drift) are not yet dual-mode wrapped — deferred to a future slice; Rust path is available via direct `agentcloseout-physics scan`.
 
 ## 4. What "physics engine" means here
 
