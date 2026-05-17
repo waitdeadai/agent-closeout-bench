@@ -42,14 +42,14 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-sycophancy | YES | YES | partial | **DOCUMENTED** |
 | no-roleplay-drift | YES | YES | partial | **DOCUMENTED** |
 | (closeout_contract aggregate) | YES | YES | partial | **DOCUMENTED** |
-| honest-eta | NO | NO | NO | **BASH-ONLY** |
+| honest-eta | YES | YES (2 rules: linear-scaling + eta-without-redemption) | 3 (Slice 3) | **DOCUMENTED** |
 | no-aggregator-hallucination | NO | NO | NO | **BASH-ONLY** |
 | no-ai-tells | NO | NO | NO | **BASH-ONLY** |
 | no-cherry-pick-rollup | NO | NO | NO | **BASH-ONLY** |
 | no-credential-leak-in-handoff | NO | NO | NO | **BASH-ONLY** |
-| no-curfew | NO | NO | NO | **BASH-ONLY** |
-| no-disclaimer-spam | NO | NO | NO | **BASH-ONLY** |
-| no-emoji-spam | NO | NO | NO | **BASH-ONLY** |
+| no-curfew | YES | YES (rule pack + operator-asked allow) | 3 (Slice 3) | **DOCUMENTED** |
+| no-disclaimer-spam | YES | YES (rule pack, no allow patterns) | 3 (Slice 3) | **DOCUMENTED** |
+| no-emoji-spam | YES | YES (feature flag emoji_count_over_3) | 3 (Slice 3) | **DOCUMENTED** |
 | no-fake-cite | YES | YES (rule pack + allow_patterns) | 6 (Slice 1) | **DOCUMENTED** |
 | no-fake-recall | YES | YES (rule pack + blockquote/quote allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-fake-stats | YES | YES (rule pack + source/hedge allow) | 3 (Slice 2) | **DOCUMENTED** |
@@ -61,10 +61,10 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-rollback-claim-without-evidence | YES | YES (rule pack + rollback-cmd allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-sandbagging-disguise | YES | YES (rule pack + blocker-evidence allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-silent-worker-success | NO | NO | NO | **BASH-ONLY** |
-| no-tldr-bait | NO | NO | NO | **BASH-ONLY** |
+| no-tldr-bait | YES | YES (zone:tail + length_over_200 flag) | 3 (Slice 3) | **DOCUMENTED** |
 | no-approval-sneak | NO | NO | NO | **BASH-ONLY** |
 
-**Summary**: After Slice 1 (no-fake-cite) and Slice 2 (fact-fabrication family of 5 hooks), 12 of 26 detector hooks (46%) have physics-engine documentation + Rust implementation. The other 14 (54%) remain bash-regex-only. Slices 3-6 close the gap.
+**Summary**: After Slice 1 (no-fake-cite), Slice 2 (fact-fabrication family, 5 hooks), and Slice 3 (interaction-style family, 5 hooks), 17 of 26 detector hooks (65%) have physics-engine documentation + Rust implementation. The other 9 (35%) remain bash-regex-only. Slices 4-6 close the gap.
 
 ## 4. What "physics engine" means here
 
