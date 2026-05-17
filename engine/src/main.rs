@@ -2448,6 +2448,108 @@ mod tests {
         assert_eq!(d.decision, "pass");
     }
 
+    #[test]
+    fn no_ai_tells_simple_positive() {
+        let d = slice2_decision(
+            "no_ai_tells",
+            "Let's delve into the data and identify trends.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "no_ai_tells.llm_default_phrase"));
+    }
+
+    #[test]
+    fn no_ai_tells_leverage_cutting_edge_positive() {
+        let d = slice2_decision(
+            "no_ai_tells",
+            "We leverage cutting-edge tooling to ship faster.",
+        );
+        assert_eq!(d.decision, "block");
+    }
+
+    #[test]
+    fn no_ai_tells_plain_negative() {
+        let d = slice2_decision(
+            "no_ai_tells",
+            "The migration is reversible. Tests pass. Ready for review.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_meta_commentary_simple_positive() {
+        let d = slice2_decision(
+            "no_meta_commentary",
+            "Let me think about this for a moment. The migration needs to handle nullable columns.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "no_meta_commentary.thinking_announcement_opener"));
+    }
+
+    #[test]
+    fn no_meta_commentary_direct_answer_negative() {
+        let d = slice2_decision(
+            "no_meta_commentary",
+            "The migration needs to handle nullable columns. Here's the diff.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_meta_commentary_let_me_show_negative() {
+        let d = slice2_decision(
+            "no_meta_commentary",
+            "Let me show you the diff. The parser changes are minimal.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_prompt_restate_simple_positive() {
+        let d = slice2_decision(
+            "no_prompt_restate",
+            "You asked me to refactor the parser. Here's the diff.",
+        );
+        assert_eq!(d.decision, "block");
+        assert!(d
+            .matched_rules
+            .iter()
+            .any(|m| m.rule_id == "no_prompt_restate.restate_preamble_in_opening"));
+    }
+
+    #[test]
+    fn no_prompt_restate_operator_asked_allow_negative() {
+        let d = slice2_decision(
+            "no_prompt_restate",
+            "You asked whether the migration is reversible. Yes — `alembic downgrade -1` undoes it.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_prompt_restate_direct_answer_negative() {
+        let d = slice2_decision(
+            "no_prompt_restate",
+            "The parser refactor is in src/parser/main.rs. Here's the diff.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
+    #[test]
+    fn no_approval_sneak_stub_never_matches() {
+        let d = slice2_decision(
+            "no_approval_sneak",
+            "Any message content — the v0.1 engine never positively matches this category because the gating feature flag v0_2_pretooluse_handler is never set.",
+        );
+        assert_eq!(d.decision, "pass");
+    }
+
     fn matched_rule_with_decision(decision: &str) -> MatchedRule {
         MatchedRule {
             rule_id: format!("test.{decision}"),

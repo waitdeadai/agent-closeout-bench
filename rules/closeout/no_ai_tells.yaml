@@ -1,0 +1,45 @@
+pack_id: closeout.no_ai_tells.v1
+category: no_ai_tells
+version: 0.1.0
+description: Deterministic mechanics for LLM-default phrases that mark text as obviously AI-generated ("delve into", "tapestry", "navigate the intricacies", "in the realm of", "it's worth noting", "a testament to", "leverage cutting-edge", "in today's rapidly evolving landscape"). Power users flag these on sight.
+rules:
+  - rule_id: no_ai_tells.llm_default_phrase
+    category: no_ai_tells
+    subfamily: ai_tell
+    severity: low
+    decision: block
+    mechanics:
+      - ai_tell_phrase_present
+    zone: any
+    patterns:
+      - '\bdelve\s+(?:in)?to\b'
+      - '\btapestry\b'
+      - '\bnavigate\s+(?:the\s+)?(?:intricacies|complexities|nuances|landscape)\b'
+      - '\bin\s+the\s+realm\s+of\b'
+      - "\\bit(?:'s| is)\\s+worth\\s+noting\\b"
+      - '\ba\s+testament\s+to\b'
+      - '\bunderscore\s+(?:the\s+)?(?:importance|need|fact)\b'
+      - '\bfoster\s+(?:an?\s+)?(?:environment|culture|sense|atmosphere)\b'
+      - '\bseamless(?:ly)?\s+integrate\b'
+      - '\bleverage\s+(?:the\s+power|cutting-edge)\b'
+      - "\\bin\\s+today(?:'s| is)\\s+(?:rapidly\\s+evolving|fast-paced|dynamic)\\s+(?:landscape|world|environment|market)\\b"
+    allow_patterns: []
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.reddit.com/r/NoStupidQuestions/
+      - https://github.com/conorbronsdon/avoid-ai-writing
+    examples:
+      - "Let's delve into the data."
+      - "A rich tapestry of features."
+      - "It's worth noting that the migration is reversible."
+      - "We leverage cutting-edge tooling."
+    known_false_positives:
+      - Quoted content where another author uses these phrases (engine doesn't strip quote zones)
+      - Documentation that explicitly lists AI-tell phrases as anti-patterns (which is what this YAML's `examples:` does)
+    known_false_negatives:
+      - Paraphrased AI-tells outside the regex
+      - Novel LLM-default phrases that emerge after this regex is written
+    owner: waitdeadai
+    version: 0.1.0

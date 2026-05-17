@@ -44,7 +44,7 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | (closeout_contract aggregate) | YES | YES | partial | **DOCUMENTED** |
 | honest-eta | YES | YES (2 rules: linear-scaling + eta-without-redemption) | 3 (Slice 3) | **DOCUMENTED** |
 | no-aggregator-hallucination | YES | YES (rule pack + per-worker-evidence allow) | 3 (Slice 4) | **DOCUMENTED** |
-| no-ai-tells | NO | NO | NO | **BASH-ONLY** |
+| no-ai-tells | YES | YES (LLM-tell phrase regex) | 3 (Slice 5) | **DOCUMENTED** |
 | no-cherry-pick-rollup | YES | YES (rule pack + claims_completion required + handled allow) | 3 (Slice 4) | **DOCUMENTED** |
 | no-credential-leak-in-handoff | YES | YES (rule pack: Stop event only; TaskCreated stays bash-only) | 3 (Slice 4) | **DOCUMENTED** |
 | no-curfew | YES | YES (rule pack + operator-asked allow) | 3 (Slice 3) | **DOCUMENTED** |
@@ -54,17 +54,17 @@ The state machinery and time-anchor hooks are continuity utilities, not dark-pat
 | no-fake-recall | YES | YES (rule pack + blockquote/quote allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-fake-stats | YES | YES (rule pack + source/hedge allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-handoff-loop | YES (stub) | YES (stub, gated by v0_2_taskcreated_handler) | 1 stub | **DOCUMENTED-LIMITED** |
-| no-meta-commentary | NO | NO | NO | **BASH-ONLY** |
+| no-meta-commentary | YES | YES (meta-opener regex, zone:opening) | 3 (Slice 5) | **DOCUMENTED** |
 | no-ownership-violation | YES (stub) | YES (stub, gated by v0_2_taskcompleted_handler) | 1 stub | **DOCUMENTED-LIMITED** |
 | no-phantom-tool-call | YES | YES (rule pack + output-evidence allow) | 3 (Slice 2) | **DOCUMENTED** |
-| no-prompt-restate | NO | NO | NO | **BASH-ONLY** |
+| no-prompt-restate | YES | YES (restate-preamble regex, zone:opening + operator-asked allow) | 3 (Slice 5) | **DOCUMENTED** |
 | no-rollback-claim-without-evidence | YES | YES (rule pack + rollback-cmd allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-sandbagging-disguise | YES | YES (rule pack + blocker-evidence allow) | 3 (Slice 2) | **DOCUMENTED** |
 | no-silent-worker-success | YES | YES (rule pack + per-worker-status allow) | 3 (Slice 4) | **DOCUMENTED** |
 | no-tldr-bait | YES | YES (zone:tail + length_over_200 flag) | 3 (Slice 3) | **DOCUMENTED** |
-| no-approval-sneak | NO | NO | NO | **BASH-ONLY** |
+| no-approval-sneak | YES (stub) | YES (stub, gated by v0_2_pretooluse_handler) | 1 stub | **DOCUMENTED-LIMITED** |
 
-**Summary**: After Slice 1 (no-fake-cite), Slice 2 (fact-fabrication, 5 hooks), Slice 3 (interaction-style, 5 hooks), and Slice 4 (multi-agent, 6 hooks: 4 DOCUMENTED + 2 DOCUMENTED-LIMITED), 21 of 26 detector hooks (81%) have at least partial physics-engine coverage — 19 DOCUMENTED, 2 DOCUMENTED-LIMITED. The other 5 (19%) remain bash-regex-only. Slice 5 closes most of the gap; a future "event-handler slice" could lift the 2 LIMITED hooks (no-handoff-loop, no-ownership-violation) to full DOCUMENTED when the Rust engine gains TaskCreated/TaskCompleted handlers.
+**Summary**: After Slices 1–5 (no-fake-cite + fact-fabrication + interaction-style + multi-agent + residual), all 26 detector hooks have at least partial physics-engine coverage — 22 DOCUMENTED + 3 DOCUMENTED-LIMITED + 1 baseline-pending. Zero remain bash-only (`no-credential-leak-in-handoff` already covers credential shapes in `last_assistant_message`; the TaskCreated path stays bash). A future "event-handler slice" would lift the 3 LIMITED hooks (no-handoff-loop, no-ownership-violation, no-approval-sneak) to full DOCUMENTED when the Rust engine gains TaskCreated/PostToolUse handlers + structural field inspection.
 
 ## 4. What "physics engine" means here
 

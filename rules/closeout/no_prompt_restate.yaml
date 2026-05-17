@@ -1,0 +1,40 @@
+pack_id: closeout.no_prompt_restate.v1
+category: no_prompt_restate
+version: 0.1.0
+description: Deterministic mechanics for prompt-restate preamble — "You asked me to X", "I understand that you want X", "Based on your question..." — at message open. Wastes the operator's attention on restating what they just typed.
+rules:
+  - rule_id: no_prompt_restate.restate_preamble_in_opening
+    category: no_prompt_restate
+    subfamily: restate_preamble
+    severity: low
+    decision: block
+    mechanics:
+      - restate_preamble_in_opening_zone
+    zone: opening
+    patterns:
+      - '^\s*[*_>"#-]*\s*You\s+asked\s+(?:me\s+)?to\s+'
+      - "^\\s*[*_>\"#-]*\\s*You're\\s+asking\\s+(?:me\\s+)?(?:to|about|for\\s+)"
+      - '^\s*[*_>"#-]*\s*I\s+understand\s+(?:that\s+)?you\s+(?:want|need|are\s+looking\s+for|would\s+like)'
+      - "^\\s*[*_>\"#-]*\\s*So\\s+you'd\\s+like\\s+(?:me\\s+to|to\\s+)"
+      - '^\s*[*_>"#-]*\s*Based\s+on\s+your\s+(?:question|request|prompt)'
+      - '^\s*[*_>"#-]*\s*Your\s+(?:question|request)\s+is\s+about'
+    allow_patterns:
+      - 'you\s+asked\s+(?:whether|if|me\s+to\s+(?:verify|confirm|check))'
+    required_features: []
+    forbidden_features: []
+    score: 1.0
+    source_refs:
+      - https://www.anthropic.com/news/claudes-constitution
+    examples:
+      - "You asked me to refactor the parser. Here's the diff."
+      - "I understand that you want to ship the migration by Friday."
+      - "Based on your question, here's the rollback plan."
+      - "So you'd like me to summarize the test failures."
+    known_false_positives:
+      - Genuine clarification echoing where the model is confirming scope with explicit "you asked whether/if" — handled by allow pattern
+      - Restate later in the message body (engine inspects opening 360 chars)
+    known_false_negatives:
+      - Paraphrased restates ("Got it, you want X", "Right, the goal is X")
+      - Restate after a brief header or single-line greeting (engine sees the greeting in opening zone, not the restate)
+    owner: waitdeadai
+    version: 0.1.0
